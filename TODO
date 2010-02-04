@@ -1,0 +1,9 @@
+Priority:
+	write a collection of tests
+
+Nice-to-have:
+	Package::Transporter::Symbol::Exporter_Export
+	Package::Transporter::Symbol::From_Variable
+
+	Package::Transporter::Application::Reverse_Resolution
+	Package::Transporter::Application::Symbol_Table

@@ -1,0 +1,332 @@
+
+=head1 NAME
+
+Package::Transporter::Package - package-specific symbol management for Package::Transporter
+
+
+=head1 SYNOPSIS
+
+The following example is equivalent to the one in the synopsis of
+Package::Transporter. This time the symbols prefixed with ATB_ (for attribute)
+represent random hash keys.
+
+	package CF7;
+	use Package::Transporter sub{eval shift};
+
+	BEGIN {
+		my $pkg = Package::Transporter->new();
+
+  		$pkg->random_values('ATB_', [], qw(NAME  TYPE  STOCK  PRICE));
+	 	$pkg->application('constant_function',
+			[SCP_PUBLIC, MIX_IMPLICIT], 'ATB_');
+	}
+
+	...
+	sub sell {
+		my ($self, $amount) = @_;
+
+		$self->{+ATB_STOCK} -= $amount;
+		my $costs = $amount * $self->{+ATB_PRICH};
+
+		return($costs);
+	}
+
+
+A more conservative approach than random values would be to use
+'lowered_values' for the application of the symbols.
+
+
+=head1 DESCRIPTION
+
+Package::Transporter::Package does the package-specific work for
+Package::Transporter. It provides the methods to generate and apply symbols and
+stores the results for future invocations.
+
+
+=head1 General Usage
+
+Don't call the constructor for Package::Transporter::Package, it will probably
+not result in what you need. Instead, the constructor for Package::Transporter
+will give you the right object, like in the following example:
+
+	my $pkg = Package::Transporter->new(sub{eval shift});
+	print ref($pkg);
+
+=head2 Transactions
+
+Package::Transporter::Package provides a simple transactional mode via the methods
+start_transaction(), commit(), and rollback(). After issuing
+start_transaction, any Perl code for a package isn't immediately
+executed, but stored - during the lifetime of the transporter object
+only. The stored code is executed upon commit(). The method
+rollback() drops the code to the floor.
+
+
+=head1 Symbol Generation
+
+To generate a symbol means to define a name/value pair, which can be
+used in various ways to define constant functions, managed attributes,
+etc. 
+
+
+
+=head2 Shipped Packages/Methods
+
+The following list gives an overview of the currently shiped modules in the Package::Transporter::Symbol:: hierarchy for symbol generation. The return value is always a reference to the list of generated symbols.
+
+
+=over 8
+
+=item $pkg->B<enumerated_values>('ATB_', [], undef, qw(PRICE));
+
+Enumerate values for the symbols in ascending order. Calling parameters are a name prefix, the symbol properties, the starting value for counting (undef for automatic), and the names.
+
+
+=item $pkg->B<random_values>('ATB_', [], qw(PRICE));
+
+Generate random values for the symbols. Calling parameters are a name prefix, the symbol properties, and the names.
+
+
+=item $pkg->B<lower_case_values>('ATB_', [], qw(PRICE));
+
+Derive the value by lowering the symbol name (without prefix). Calling parameters are a name prefix, the symbol properties, and the names.
+
+
+=item $pkg->B<named_values>('IS_', [], 'TRUE' => 1);
+
+Obtain full name/value-pairs. Calling parameters are a name prefix, the symbol properties, and the name/value-pairs.
+
+
+=back
+
+
+
+
+=head2 Symbol Properties
+
+A symbol has the following properties. Values marked with an
+asterisk are the default.
+
+=over 8
+
+=item B<Quoting> - QTG_AUTOMATIC(*) / QTG_NONE
+
+Whether the value needs quoting or not.
+
+=item B<Life Span> - LSP_TEMPORARY(*) / LSP_PERMANENT
+
+Whether the symbol can be removed to minimize the package object.
+
+=item B<Stage> - STG_COMPLETED(*) / STG_PROTOTYPE
+
+Whether a value is available for this symbol.
+
+=back
+
+
+=head1 Symbol Application
+
+An application provides the actual implementation associated with a symbol. One symbol can have several applications.
+
+
+=head2 Shipped Packages/Methods
+
+=over 8
+
+=item $pkg->application('B<constant_function>', [], 'ATB__');
+
+Create subroutines from the symbols, where the name is the subroutine name and the value is the subroutine return value. Calling parameter are the method name, the application properties, and the symbol names or prefixes (indicated by trailing _).
+
+=item $pkg->application('B<managed_attributes_abo_simple>', [], 'ATB_');
+
+Create managed attributes (get_/set_-style) from the symbols, suitable for array based object (abo). Calling parameter are the method name, the application properties, and the symbol names or prefixes (indicated by trailing _).
+
+=item $pkg->application('B<include_file:./usefull.pl>', [], 'ATB_');
+
+Load the specified file, perform search & replace using the symbol name/value (name enclosed in double underscores, like in __ATB_PRICE__), and eval it. Calling parameter are the method name separated with a colong from the file name, the application properties, and the symbol names or prefixes (indicated by trailing _).
+
+=back
+
+
+
+
+=head2 Application Properties
+
+An application has the following properties. Values marked with an asterisk are the default.
+
+=over 8
+
+=item B<Scope> - SCP_PRIVATE(*) / SCP_PUBLIC
+
+Whether the application is available to other packages or not.
+
+=item B<Mix> - MIX_EXPLICIT(*) / MIX_IMPLICIT
+
+Whether a merge will have to specify the application explicitly or not.
+
+=item B<Implementation> - IMP_INSTANT(*) / IMP_ON_DEMAND
+
+Whether the application will be submitted instantly or not (i.e. waiting for autoload to pull it).
+
+=item B<Undo> - UND_NEVER(*) / UND_TRIGGERED
+
+Whether the application should be undone (later) or not (never). Think of an undef for the variable or subroutine.
+
+=item B<Propagation> - PRP_LOCAL(*) / PRP_UNIVERSAL
+
+Whether the application should be propagated to the local package or
+to the special package '*', which holds universal applications.
+
+=item B<Update> - UPD_NONE(*) / UPD_AUTOMATIC
+
+Warning: not implemented, yet. Whether newly added symbols should not update the application. With automatic updates, symbols start to find suitable applications.
+
+=back
+
+
+=head1 Convenience Methods
+
+These are combination of symbol generation and application. No return value.
+
+=head2 Shipped Packages/Methods
+
+=over 8
+
+=item $pkg->B<array_indices>('ATB_', [], qw(PRICE));
+
+A combination of enumerated_values and constant_function. Calling parameter are a name prefix, the application properties, and the names. 
+
+=item $pkg->B<global_constants>('IS_', [], qw(TRUE));
+
+A combination of named_values and constant_function. Calling parameter are a name prefix, the application properties, and the names. 
+
+
+=item $pkg->B<class_constants>('IS_', [], qw(TRUE));
+
+Like global_constants, but without universal propagation.
+
+=back
+
+
+=head1 PUBLIC METHOD REFERENCE
+
+When you call an unknown method, it is resolved via
+Package::Transporter::Symbol::*. The first parameter of application is resolved
+via Package::Transporter::Application::*.
+
+=over 8
+
+=item $pkg->B<set_visit_point>(sub{eval shift});
+
+Set the new package visit point (this sub-eval-shift thinggy). Calling parameter is the anonymous code reference; no return value.
+
+=item $pkg->B<application>('constant_function', [], 'ATB_');
+
+Construct an Package::Transporter::Application object and add it via add_application. Calling parameters are the name, properties and symbols; no return value.
+
+=item $pkg->B<add_application>($application);
+
+Add an Package::Transporter::Application object to the internal list. Calling parameter is one object; no return value.
+
+=item $pkg->B<lookup_applications>('constant_function');
+
+Find an application by name. Calling parameter is one name; return values are the matching application objects.
+
+=item $pkg->B<minimize>();
+
+Call the sweep code collected from applications marked with UND_TRIGGERED. Also remove symbols marked as LSP_TEMPORARY. No calling parameter; no return value.
+
+=item $pkg->B<mix_isa>();
+
+Iterate through the package names in @ISA and mix them into the current package. No calling parameter; no return value.
+
+=item $pkg->B<mix>('CF5');
+
+Mix the applications (SCP_PUBLIC, MIX_IMPLICIT) and the associated symbols of the specified package into the current package.
+
+=item $pkg->B<mix_explicit>('CF5');
+
+Like mix, but for MIX_EXPLICIT.
+
+=item my $sym_price = $pkg->B<retrieve>('ATB_PRICE');
+
+Retrieve values of symbols. Calling parameters are the symbol names; their values are returned.
+
+=item $pkg->B<assign>('ATB_PRICE' => my $sym_price);
+
+Assign values of symbols to variables. Calling parameters are pairs of symbol names and variables; no return value.
+
+=item $pkg->B<start_transaction>();
+
+Start transactional mode. Dies if that mode is already active. No calling parameter; no return value.
+
+=item $pkg->B<commit>();
+
+End transactional mode and execute any stored perl code for the package. Dies if not in that mode. No calling parameter; no return value.
+
+=item $pkg->B<rollback>();
+
+End transactional mode and drop any stored perl code. Dies if not in that mode. No calling parameter; no return value.
+
+=back
+
+
+
+=head1 KNOWN BUGS AND LIMITATIONS
+
+This is the first public release of Package::Transporter. The module hasn't yet
+been throughly tested, making the probability of nasty bugs quiet
+high. If you want to use Package::Transporter in a production environment,
+which is not recommended at the current stage, then you would
+certainly need heavy additional testing on your side to protect you
+from such bugs. The main purpose of the release is to open
+the stage for comments early. 
+
+In addition to the stage of the development, be warned that
+Package::Transporter is old-fashioned technology. It overcomes the lack of full
+OO support in Perl, meaning identifier management for methods (exists)
+plus attributes (missing). With Perl6 or any modern language,
+Package::Transporter has no point.
+
+
+=head1 WISHLIST
+
+The author hopes that one day there will be a 'use stricter'. Which
+does, among other things:
+
+=over 8
+
+=item * Make its effect irreversible. Meaning there is no 'no stricter'.
+
+=item * Introduce 2 as irreversible flag in Internals::SvREADONLY(..., 2); with the purpose of locking the readonly flag.
+
+=item * Let Internals::SvREADONLY also prohibt re-blessing a locked reference, re-declaring a package namespace and re-defining a subroutine.
+
+=item * Complain about the unquoted string in { key => 'value' }. Yes, there is an unquoted string and it should be treated as such. Or at least give precedence to constant functions.
+
+=item * Make the namespace of a package read-only for other packages. (Indirect access to the symbol table via '::' is read-only.).
+
+=item * Disable direct access to the symbol table. No \*, no \%::. Or at least restricted to the current package.
+
+=item * Let 'package' return a reference to or name of the namespace.
+
+=back
+
+=head1 AUTHOR
+
+Winfried Trumper <pub+perl@wt.tuxomania.net>
+
+
+=head1 COPYRIGHT
+
+Copyright (C) 1999,2010 Winfried Trumper
+
+This module is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+
+=head1 SEE ALSO
+
+Exporter
+
+=cut

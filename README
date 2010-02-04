@@ -1,0 +1,13 @@
+Transporter - encourages the use of constant functions
+
+Through convenient management of constant functions a 
+a greater expressiveness of Perl5 code can be achieved,
+while keeping fundamental programming practices intact.
+Constant functions result in an inlined value, meaning that
+no actual subroutine call is performed by perl internally.
+
+Transporter generates Perl code based on very simple rules defined by
+the programmer. The generated code is added to modules via an
+explicitly declared visit point. Transporter won't do magic
+(something implicit in the background) via arbitrary symbol table
+manipulations.

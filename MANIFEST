@@ -1,0 +1,34 @@
+Changes
+examples/CF0.pl
+examples/CF1.pl
+examples/CF2.pl
+examples/CF3.pl
+examples/CF4.pl
+examples/CF5_6.pl
+INSTALL
+lib/Package/Transporter.pm
+lib/Package/Transporter.pod
+lib/Package/Transporter/Application.pm
+lib/Package/Transporter/Application/Constant_Function.pm
+lib/Package/Transporter/Application/Include_File.pm
+lib/Package/Transporter/Application/Managed_Attributes_Abo_Simple.pm
+lib/Package/Transporter/Application/Reverse_Resolution.pm
+lib/Package/Transporter/Application/Symbol_Table.pm
+lib/Package/Transporter/Package.pm
+lib/Package/Transporter/Package.pod
+lib/Package/Transporter/Symbol.pm
+lib/Package/Transporter/Symbol/Array_Indices.pm
+lib/Package/Transporter/Symbol/Class_Constants.pm
+lib/Package/Transporter/Symbol/Enumerated_Values.pm
+lib/Package/Transporter/Symbol/Exporter_Export.pm
+lib/Package/Transporter/Symbol/Global_Constants.pm
+lib/Package/Transporter/Symbol/Lower_Case_Values.pm
+lib/Package/Transporter/Symbol/Named_Values.pm
+lib/Package/Transporter/Symbol/Random_Values.pm
+lib/Package/Transporter/Symbols.pm
+Makefile.PL
+MANIFEST			This list of files
+README
+t/fail_intentionally.t
+TODO
+META.yml                                 Module meta-data (added by MakeMaker)
