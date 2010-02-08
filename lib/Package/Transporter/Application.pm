@@ -63,7 +63,7 @@ sub set_properties {
 
 
 sub has_properties {
-	my ($self, $properties) = (shift);
+	my ($self, $properties) = @_;
 
 	foreach my $property (@$properties) {
 	        if (($self->[ATB_PROPERTIES] & $property) != $property) {
@@ -73,14 +73,6 @@ sub has_properties {
 	return(1);
 }
 
-
-sub is_instant_implementation {
-	return(($_[0][ATB_PROPERTIES] & IMP_INSTANT) == 0);
-}
-
-sub is_on_demand_implementation { 
-	return(($_[0][ATB_PROPERTIES] & IMP_ON_DEMAND) > 1);
-}
 
 sub is_private_scope {
 	return(($_[0][ATB_PROPERTIES] & SCP_PRIVATE) == 0);
@@ -98,6 +90,22 @@ sub is_implicit_mix {
 	return(($_[0][ATB_PROPERTIES] & MIX_IMPLICIT) > 1);
 }
 
+sub is_exclusive_symbols {
+	return(($_[0][ATB_PROPERTIES] & SYM_EXCLUSIVE) == 0);
+}
+
+sub is_complementing_symbols {
+	return(($_[0][ATB_PROPERTIES] & SYM_COMPLEMENT) > 1);
+}
+
+sub is_instant_implementation {
+	return(($_[0][ATB_PROPERTIES] & IMP_INSTANT) == 0);
+}
+
+sub is_on_demand_implementation { 
+	return(($_[0][ATB_PROPERTIES] & IMP_ON_DEMAND) > 1);
+}
+
 sub is_never_undo {
 	return(($_[0][ATB_PROPERTIES] & UND_NEVER) == 0);
 }
@@ -106,14 +114,10 @@ sub is_triggered_undo {
 	return(($_[0][ATB_PROPERTIES] & UND_TRIGGERED) > 1);
 }
 
-sub is_local_propagation {
-	return(($_[0][ATB_PROPERTIES] & PRP_LOCAL) == 0);
+sub symbols_mix {
+	my $value = (($_[0][ATB_PROPERTIES] & SYM_EXCLUSIVE) > 1) ? 1 : 0;
+	return($value+SYM_EXCLUSIVE);
 }
-
-sub is_universal_propagation {
-	return(($_[0][ATB_PROPERTIES] & PRP_UNIVERSAL) > 1);
-}
-
 
 sub selected_symbols {
 	my ($self, $symbols) = @_;

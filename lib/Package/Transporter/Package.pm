@@ -17,10 +17,9 @@ sub AUTOLOAD {
 sub ATB_NAME() { 0 };
 sub ATB_VISIT_POINT() { 1 };
 sub ATB_SYMBOLS() { 2 };
-sub ATB_DEFAULT_PROPERTIES() { 3 };
-sub ATB_APPLICATIONS() { 4 };
-sub ATB_TRANSACTION() { 5 };
-sub ATB_CLEANUP_CODE() { 6 };
+sub ATB_APPLICATIONS() { 3 };
+sub ATB_TRANSACTION() { 4 };
+sub ATB_CLEANUP_CODE() { 5 };
 
 my @EXPORT = qw(ATB_NAME ATB_VISIT_POINT ATB_SYMBOLS ATB_APPLICATIONS
 	ATB_TRANSACTION ATB_CLEANUP_CODE);
@@ -34,7 +33,6 @@ sub new {
 	my $self = [$name,			#ATB_NAME
 		undef,				#ATB_VISIT_POINT
 		Package::Transporter::Symbols->new(),	#ATB_SYMBOLS
-		1,				#ATB_DEFAULT_PROPERTIES
 		[],				#ATB_APPLICATIONS
 		undef,				#ATB_TRANSACTION
 		'',				#ATB_CLEANUP_CODE
@@ -85,11 +83,11 @@ sub add_application {
 		return;
 	}
 
-	if ($application->is_universal_propagation()) {
-		Package::Transporter::add_universal($self, $application);
-	} else {
+#	if ($application->is_universal_propagation()) {
+#		Package::Transporter::add_universal($self, $application);
+#	} else {
 		push(@{$self->[ATB_APPLICATIONS]}, $application);
-	}
+#	}
 
 	if ($application->is_instant_implementation()) {
 		my @transaction = $application->apply($self->[ATB_SYMBOLS]);
@@ -113,7 +111,18 @@ sub lookup_applications {
 
 
 sub selected_symbols { return($_[1]->selected_symbols($_[0][ATB_SYMBOLS])); }
-sub import_symbols { $_[0][ATB_SYMBOLS]->complement($_[1]); return; }
+sub import_symbols {
+	my ($self, $mode) = (shift, shift);
+
+	if($mode == SYM_EXCLUSIVE) {
+		$self->[ATB_SYMBOLS]->add(@_);
+	} elsif($mode == SYM_COMPLEMENT) {
+		$self->[ATB_SYMBOLS]->complement(@_);
+	} else {
+		Carp::confess("Unknown symbol import mode '$mode'.\n");
+	}
+	return;
+}
 
 
 sub minimize {
@@ -129,60 +138,80 @@ sub minimize {
 }
 
 
-sub data_export {
+# sub data_export {
+# 	my ($self) = (shift);
+# 
+# 	my $vehicle = sprintf('vehicle_%s_%08x', time(), int(rand(2**32-1)));
+# 
+# 	my $get_data = q{ return(join(', ', @TRANSPORTER_DATA_EXPORT)); };
+# 	my $data = $self->transport(\$get_data);
+# 
+# 	my $load_data = sprintf('our @%s = (%s);', $vehicle, $data);
+# 	$self->transport(\$load_data);
+# 
+# 	$vehicle = $self->[ATB_NAME].'::'.$vehicle;
+# 	return($vehicle, $data);
+# }
+# 
+# 
+# sub data_import {
+# 	my ($self, $vehicle, $data) = (shift, shift, shift);
+# 
+# 	my $unload_data = sprintf('(%s) = splice(@%s);', $data, $vehicle);
+# 	$self->transport(\$unload_data);
+# 	return;
+# }
+# 
+# 
+# sub data_clear {
+# 	my ($self, $vehicle) = (shift, shift);
+# 
+# 	my $clear_data = sprintf('undef @%s;', $vehicle);
+# 	$self->transport(\$clear_data);
+# 	return;
+# }
+
+
+sub mix_along_hierarchy {
 	my ($self) = (shift);
 
-	my $vehicle = sprintf('vehicle_%s_%08x', time(), int(rand(2**32-1)));
-
-	my $get_data = q{ return(join(', ', @TRANSPORTER_DATA_EXPORT)); };
-	my $data = $self->transport(\$get_data);
-
-	my $load_data = sprintf('our @%s = (%s);', $vehicle, $data);
-	$self->transport(\$load_data);
-
-	$vehicle = $self->[ATB_NAME].'::'.$vehicle;
-	return($vehicle, $data);
-}
-
-
-sub data_import {
-	my ($self, $vehicle, $data) = (shift, shift, shift);
-
-	my $unload_data = sprintf('(%s) = splice(@%s);', $data, $vehicle);
-	$self->transport(\$unload_data);
+	my $path = $self->[ATB_NAME];
+	my @hierarchy = ();
+	while($path =~ s,::\w+$,,s) {
+		push(@hierarchy, $path);
+	}
+	
+	Package::Transporter::mix_implicit($self, @hierarchy);
 	return;
 }
 
 
-sub data_clear {
-	my ($self, $vehicle) = (shift, shift);
-
-	my $clear_data = sprintf('undef @%s;', $vehicle);
-	$self->transport(\$clear_data);
-	return;
-}
-
-
-sub mix_in_isa {
+sub mix_along_isa {
 	my ($self) = (shift);
 
 	# ready for lexically scoped @ISA
 	my $return_isa = sprintf('return(@%s::ISA);', $self->[ATB_NAME]);
-	my @isa = $self->transport($return_isa);
+	my @isa = $self->transport(\$return_isa);
 
-	Package::Transporter::mix_implicit($self, SCP_PUBLIC, @isa);
+	Package::Transporter::mix_implicit($self, @isa);
+	return;
+}
+
+
+sub mix_in_main { # just a placeholder
+	Package::Transporter::mix_implicit($_[0], 'main');
 	return;
 }
 
 
 sub mix_in {
-	Package::Transporter::mix_implicit(shift, SCP_PUBLIC, @_);
+	Package::Transporter::mix_implicit($_[0], @_);
 	return;
 }
 
 
 sub mix_in_explicit {
-	Package::Transporter::mix_explicit(@_);
+	Package::Transporter::mix_explicit($_[0], @_);
 	return;
 }
 

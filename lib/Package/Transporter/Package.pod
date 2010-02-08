@@ -1,3 +1,4 @@
+=pod
 
 =head1 NAME
 
@@ -162,7 +163,11 @@ Whether the application is available to other packages or not.
 
 =item B<Mix> - MIX_EXPLICIT(*) / MIX_IMPLICIT
 
-Whether a merge will have to specify the application explicitly or not.
+Whether a mix will have to specify the application explicitly or not.
+
+=item B<Symbol Mix> - SYM_EXCLUSIVE(*) / SYM_COMPLEMENT
+
+Whether the symbols associated are mixed exclusively (existing symbols are an error) or whether they complement existing symbols.
 
 =item B<Implementation> - IMP_INSTANT(*) / IMP_ON_DEMAND
 
@@ -171,11 +176,6 @@ Whether the application will be submitted instantly or not (i.e. waiting for aut
 =item B<Undo> - UND_NEVER(*) / UND_TRIGGERED
 
 Whether the application should be undone (later) or not (never). Think of an undef for the variable or subroutine.
-
-=item B<Propagation> - PRP_LOCAL(*) / PRP_UNIVERSAL
-
-Whether the application should be propagated to the local package or
-to the special package '*', which holds universal applications.
 
 =item B<Update> - UPD_NONE(*) / UPD_AUTOMATIC
 
@@ -314,7 +314,7 @@ does, among other things:
 
 =head1 AUTHOR
 
-Winfried Trumper <pub+perl@wt.tuxomania.net>
+Winfried Trumper E<lt>pub+perl(a)wt.tuxomania.netE<gt>
 
 
 =head1 COPYRIGHT

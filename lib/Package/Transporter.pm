@@ -3,14 +3,13 @@ use strict;
 use warnings;
 use Carp qw();
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our $DEBUG = 0;
 
 my @EXPORT = qw(QTG_AUTOMATIC QTG_NONE LSP_TEMPORARY LSP_PERMANENT 
 	STG_COMPLETED STG_PROTOTYPE
-	IMP_INSTANT IMP_ON_DEMAND UND_NEVER UND_TRIGGERED
-	SCP_PRIVATE SCP_PUBLIC MIX_EXPLICIT MIX_IMPLICIT PRP_LOCAL
-	PRP_UNIVERSAL);
+	SCP_PRIVATE SCP_PUBLIC MIX_EXPLICIT MIX_IMPLICIT SYM_EXCLUSIVE
+	SYM_COMPLEMENT IMP_INSTANT IMP_ON_DEMAND UND_NEVER UND_TRIGGERED);
 
 # symbol properties
 
@@ -31,22 +30,22 @@ sub SCP_PUBLIC() { 1+2**4 };
 sub MIX_EXPLICIT() { 0+2**5 };
 sub MIX_IMPLICIT() { 1+2**5 };
 
-sub IMP_INSTANT() { 0+2**6 };
-sub IMP_ON_DEMAND() { 1+2**6  };
+sub SYM_EXCLUSIVE() { 0+2**6 };
+sub SYM_COMPLEMENT() { 1+2**6 };
 
-sub UND_NEVER() { 0+2**7 };
-sub UND_TRIGGERED() { 1+2**7 };
+sub IMP_INSTANT() { 0+2**7 };
+sub IMP_ON_DEMAND() { 1+2**7  };
 
-sub PRP_LOCAL() { 0+2**8 };
-sub PRP_UNIVERSAL() { 1+2**8 };
+sub UND_NEVER() { 0+2**8 };
+sub UND_TRIGGERED() { 1+2**8 };
 
-sub UPD_NONE() { 0+2**9 }; # reserved
-sub UPD_AUTOMATIC() { 1+2**9 }; # reserved
+#sub UPD_NONE() { 0+2**9 }; # reserved
+#sub UPD_AUTOMATIC() { 1+2**9 }; # reserved
 
 
 require Package::Transporter::Package;
+#use Package::Transporter::Package;
 our $PACKAGES = {};
-$PACKAGES->{'*'} = Package::Transporter::Package->new('*');
 
 my $obtain = sub {
 	my $name = shift;
@@ -120,54 +119,37 @@ sub mix_explicit {
 }
 
 
-sub mix_implicit($$@) {
-	my ($pkg1, $scope) = (shift, shift);
+sub mix_implicit {
+	my ($pkg1) = (shift);
 
+	my $properties = [SCP_PUBLIC, MIX_IMPLICIT];
 	foreach my $name (@_) {
-		unless (exists($PACKAGES->{$name})) {
-			Carp::confess("No package '$name'.");
-		}
+		next unless(exists($PACKAGES->{$name}));
 		my $pkg2 = $PACKAGES->{$name};
-		my $applications = $pkg2->lookup_applications([$scope, MIX_IMPLICIT]);
+		my $applications = $pkg2->lookup_applications($properties);
 		_mix($pkg1, $pkg2, @$applications);
 	}
 }
 
 
-sub _mix($$) {
+sub _mix {
 	my ($pkg1, $pkg2) = (shift, shift);
 
-	my $properties = [SCP_PRIVATE, MIX_EXPLICIT, PRP_LOCAL];
+	my $properties = [SCP_PRIVATE, MIX_EXPLICIT];
 	foreach my $application (@_) {
 		my $selected = $pkg2->selected_symbols($application);
 
-		$pkg1->import_symbols($selected);
+		my $mode = $application->symbols_mix();
+		$pkg1->import_symbols($mode, $selected);
 		my $clone = $application->clone();
-		if ($pkg1 ne $PACKAGES->{'*'}) {
-			$clone->set_properties($properties);
-		}
+		$clone->set_properties($properties);
 		$pkg1->add_application($clone);
 	}
 
-#FIXME: we're running in BEGIN {..} - no (lexically scoped) variable, yet
-#	return if (($pkg1 eq $PACKAGES->{'*'}) or ($pkg2 eq $PACKAGES->{'*'}));
-#	my ($vehicle, $data) = $pkg2->data_export();
-#	$pkg1->data_import($vehicle, $data);
-#	$pkg2->data_clear($vehicle);
 }
 
 
-sub add_universal($$) {
-	my ($pkg2, $application) = (shift, shift);
-
-	my $pkg1 = $PACKAGES->{'*'};
-	my $selected = $pkg2->selected_symbols($application);
-	$pkg1->import_symbols($selected);
-	$pkg1->add_application($application);
-}
-
-
-sub import($@) {
+sub import {
 	my ($class) = (shift);
 
 	package_vs_file_name(caller()) if ($DEBUG);
@@ -180,7 +162,25 @@ sub import($@) {
 	return if ($caller0 =~ m,Package::Transporter::,s);
 
 	my $pkg = $obtain->($caller0, $subeval);
-	mix_implicit($pkg, PRP_UNIVERSAL, '*');
+	mix_implicit($pkg, 'main');
+
+	foreach my $arg (@_) {
+		my ($cmd, $name) = split(':', $arg, 2);
+		if($cmd eq 'mix_in') {
+			if($name eq 'isa') {
+				$pkg->mix_along_isa();
+			} elsif($name eq 'hierarchy') {
+				$pkg->mix_along_hierarchy();
+			} elsif($name eq '*') {
+				$pkg->mix_along_isa();
+				$pkg->mix_along_hierarchy();
+			} else {
+				mix_implicit($pkg, $name);
+			}
+			next;
+		}
+		Carp::confess("Unknown named parameter '$cmd'.");
+	}
 }
 
 #my %HELPERS = ();
@@ -196,7 +196,6 @@ sub _import_subroutines {
 		my $undefines = join("\n", map(sprintf('undef &%s;', $_), @$EXPORT));
 		$defines .= "sub transporter_cleanup_constant_functions() {\n$undefines\n}\n";
 	}
-#	print STDERR "def: $defines\n";
 
 	$subeval->($defines);
 	Carp::confess($@) if ($@);
@@ -206,6 +205,7 @@ sub _import_subroutines {
 sub binary_properties($$$) {
 	my ($result, $range, $properties) = (shift, shift, shift);
 
+	return(1) unless(defined($properties));
 PROP:	foreach my $property (@$properties) {
 		my $value = ($property & 1);
 		foreach my $position (@$range) {

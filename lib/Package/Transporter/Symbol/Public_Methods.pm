@@ -1,21 +1,21 @@
-package Package::Transporter::Symbol::Array_Indices;
+package Package::Transporter::Symbol::Public_Methods;
 use strict;
 use warnings;
 use Package::Transporter sub{eval shift};
 use Package::Transporter::Package sub{eval shift};
 use Package::Transporter::Symbol;
 
+
 # This module implements a convenience function, which implements the
 # generated symbols as constant functions.
 
-sub array_indices {
-	my ($self, $prefix, $default) = (shift, shift, shift);
+sub public_methods {
+	my ($self, $prefix) = (shift, shift);
 
 	my $properties = Package::Transporter::binary_properties(1,
-		[16, 32, 64, 128, 256], $default);
+		[16, 32, 64, 128, 256], [SCP_PUBLIC, MIX_IMPLICIT]);
 
-#	unshift(@$properties, SCP_PUBLIC, MIX_IMPLICIT); # for _base version
-	my $symbols = $self->enumerated_values($prefix, [], undef, @_);
+	my $symbols = $self->named_values($prefix, undef, @_);
 	$self->application('constant_function', $properties, @$symbols);
 
 	return($symbols);

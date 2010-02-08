@@ -1,7 +1,8 @@
+=pod
 
 =head1 NAME
 
-Package::Transporter - Encourages the use of constant functions
+Package::Transporter - encourages the use of constant functions
 
 
 =head1 SYNOPSIS
@@ -14,16 +15,17 @@ is about compile-time.
 	package CF3;
 	use strict;
 
-	use Package::Transporter sub{eval shift};
+	use Package::Transporter sub{eval shift}, 'mix_in:*';
 	BEGIN {
 		Package::Transporter->new()
-		->array_indices('ATB_', [], qw(NAME  TYPE  STOCK  PRICE));
+		->array_indices('ATB_', [], qw(NAME  SALE  STOCK  PRICE));
 	}
 
 	#...
 	sub sell {
 		my ($self, $amount) = @_;
 
+		return if(ABT_SALE == IS_FALSE);
 		$self->[ATB_STOCK] -= $amount;
 		my $costs = $amount * $self->[ATB_PRICH];
 
@@ -34,13 +36,15 @@ is about compile-time.
 Perl will tell you at compile time about the typing mistake ATB_PRICH,
 which could be seen as the main motivation for the exercise. The
 generated symbols can be inherited by other packages, therefore
-completing the OO system of Perl.
+completing the OO system of Perl. The symbol IS_FALSE is such an
+example, it comes from a imaginary upstream package through the
+mix_in:*.
 
 
 =head1 WARNING
 
-This is the first public release of Package::Transporter. The module hasn't yet
-been throughly tested, making the probability of nasty bugs quiet
+This is the first public release of Package::Transporter. The module hasn't
+been throughly tested, making the probability of fatal bugs quiet
 high. If you want to use Package::Transporter in a production environment,
 which is not recommended at the current stage, then you would
 certainly need heavy additional testing on your side to protect you
@@ -48,16 +52,16 @@ from the effect of bugs. The main purpose of the release is to open
 the stage for comments early. 
 
 In addition to the stage of the development, be warned that
-Package::Transporter is old-fashioned technology. It overcomes the lack of full
-OO support in Perl, meaning identifier management for methods plus
-attributes. With Perl6 or any modern language, Package::Transporter has no
-point. If you plan to switch to Perl6 soon, then Package::Transporter is
-definitely not for you.
+Package::Transporter is a workaround. It overcomes the lack of full OO
+support in Perl5, meaning identifier management for methods plus
+attributes. With Perl6 or any modern language, Package::Transporter
+has little point. If you plan to switch to Perl6 soon, then
+Package::Transporter is definitely not for you.
 
 
 =head1 DESCRIPTION
 
-The objective of Package::Transporter is to encourage a greater
+The objective of Package::Transporter is to promote a greater
 expressiveness of Perl5 code, while keeping fundamental programming
 practices intact. Practically this is achieved through constant
 functions, which are managed in a convenient manner. For details on
@@ -72,14 +76,17 @@ explicitly declared visit point.
 
 =head2 The Prefix
 
-If this package is convincing, it will result in many symbols being
-used. That introduces the chance of name clashes. Meaning that the
-name is allocated for conflicting purposes. You can protect from such
+This package can easily lead to many symbols being used, thus
+potentially increasing the chance of name clashes. Meaning that a name
+is allocated for conflicting purposes. You can protect from such
 clashes by using a meaningful prefix. Example: IMAP_CST_ as prefix for
 DISCONNECTED, to indicate that the symbol IMAP_CST_DISCONNECTED is
 about a disconnected IMAP client state. This is a general
-recommendation and independant of the scope or propagation of the
-name.
+recommendation and independant of the scope or propagation of a
+name. 
+
+Package::Transporter supports a prefix for most symbol operations,
+so that they can be specified in a concise way.
 
 
 =head2 Motivation
@@ -89,8 +96,8 @@ are based on scalar strings, which opens the door for typing
 mistakes. Perl can't tell you about the typing mistake IS_OM_SALE in
 package CF0 (see below) at compile time. With Hash::Util you can set a
 trigger for a fatal exception once the erroneous code is executed, but
-that is unpredictable - maybe it never happens - and too late compared to the
-trivial nature of the error.
+that is unpredictable - maybe it never happens - and really late
+compared to the trivial nature of the error.
 
 	# -- common approach using strings (without Package::Transporter)
 	package CF0;
@@ -183,8 +190,9 @@ world.
 
 =head2 Performance Potential
 
-Arrays are faster and require less memory than hashes in
-perl5. Package::Transporter makes it attractive to implement objects as arrays.
+Arrays are slightly faster and require less memory than hashes in
+perl5. Package::Transporter makes it attractive to implement objects
+via array references.
 
 However, it should be noted that constant functions do have a
 performance impact, because they use up additional memory and defining
@@ -215,8 +223,7 @@ goals and implementations differ. Exporter keeps creation and sharing
 separate, so that the programmer has extra work in keeping them in
 sync. Exporter is a small generic solution, which uses direct symbol
 table manipulations for efficiency. Package::Transporter is bigger in terms of
-amount of code and functions provided; although you might find them
-less complex and easier to understand. With Package::Transporter, the symbol
+amount of code and functions provided. With Package::Transporter, the symbol
 table is manipulated indirectly at defined visit points. It aims at
 automated creation and automatically synchronized sharing. Package::Transporter
 can deal with lexically scoped and state variables, although in a very
@@ -228,9 +235,9 @@ alive at or after BEGIN. A source code filter is intended to create a full
 Perl module. Package::Transporter only complements modules at visit points.
 
 The 'constant' module is a special case of Package::Transporter with
-constant_function applied. One example in the man page really calls
-for more compactness, which can be provided with Package::Transporter
-(see example RELCON1 below).
+constant_function applied. One example in its man page really calls
+for more compactness (and for the prefix !!!!!!!), which can be
+provided via Package::Transporter (see example RELCON1 below).
 
 	package RELCON1;
 	use strict;
@@ -244,20 +251,24 @@ for more compactness, which can be provided with Package::Transporter
 
 =head1 USAGE
 
-When you activate the Package::Transporter module through the statement 'use', pass
-a package visiting point as a parameter. Meaning the somewhat funny
-anonymous subroutine sub{eval shift}. All actions of Package::Transporter refer
-to the visiting point. You can re-define the visiting point of a package
-by passing such a subroutine to the constructor again, like in
+When you activate the Package::Transporter module through the
+statement 'use', pass a package visiting point as a parameter. Meaning
+the somewhat funny anonymous subroutine sub{eval shift}. Optionally
+you can specify which applications from other packages to mix in and
+mix_in:* is a normal choice.
+
+	use Package::Transporter sub{eval shift}, 'mix_in:*';
+
+All actions of Package::Transporter refer to the visiting point. You
+can re-define the visiting point of a package by passing such a
+subroutine to the constructor again, like in
 
 	my $pkg = Package::Transporter->new(sub{eval shift});
 
 Remember that the new method returns an object of class
-Package::Transporter::Package, therefore the variable name $pkg. Upon
-activation of Package::Transporter for your package, it will automatically
-implement symbols, which have previously been declared with a
-propagation of 'universal'. Example of defining the universal symbols
-YES and NO:
+Package::Transporter::Package, therefore the variable name
+$pkg. Applications and their symbols can be shared between
+packages. Example:
 
 	package CF5;
 	use strict;
@@ -265,18 +276,37 @@ YES and NO:
 
 	BEGIN {
 		my $pkg = Package::Transporter->new();
-		$pkg->global_constants('IS_', 'YES' => 1, 'NO' => 0);
+		$pkg->package_constants('IS_', 'TRUE' => 1, 'FALSE' => 0);
 	}
 
 	package CF6;
-	use Package::Transporter sub{eval shift};
+	use Package::Transporter sub{eval shift}, 'mix_in:CF5';
 
-	die() if (IS_YES == IS_NO);
+	die() if (IS_TRUE == IS_FALSE);
 
-If you don't want to receive universal Package::Transporter symbols, then don't
-pass the visiting point upon activation.
+Further details on the usage can be found in the documentation for the
+package Package::Transporter::Package.
 
-Further details on the usage can be found in the documentation for the package Package::Transporter::Package.
+=head2 Mix Ins
+
+The optional second argument in the use statement specifies the mix
+with other packages. Only such external applications are mixed in, which have
+the properties SCP_PUBLIC and MIX_IMPLICIT set.
+
+=over 8
+
+=item * B<mix from main> - the default; no second parameter; always done
+
+=item * B<mix along @ISA> - selected with 'mix_in:isa'; search through @ISA (the array maintained via 'use base') for packages using Transporter
+
+=item * B<mix along hierarchy> - selected with 'mix_in:hierarchy'; search through the own package name for other packages using Transporter; package A:B:C will attempt to mix in from A:B and A.
+
+=item * B<all of the above> - selected with 'mix_in:*'
+
+=back
+
+If you don't want to mix at all, then don't pass the visiting point
+as the first argument in the use statement.
 
 
 =head1 CONCEPT
@@ -349,7 +379,7 @@ The sweeper. Removes the object from the Package::Transporter class with the int
 This is the first public release.
 
 
-=head1 WISHLIST
+=head2 WISHLIST
 
 The author hopes that one day there will be a 'use stricter'. Which
 does, among other things:
@@ -375,7 +405,7 @@ does, among other things:
 
 =head1 AUTHOR
 
-Winfried Trumper <pub+perl@wt.tuxomania.net>
+Winfried Trumper E<lt>pub+perl(a)wt.tuxomania.netE<gt>
 
 
 =head1 COPYRIGHT
@@ -388,6 +418,9 @@ under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-Package::Transporter::Package
+The manual page for L<Package::Transporter::Package> contains the details
+of using and extending Package::Transporter.
+
+Different approaches are provided by the Perl modules L<Exporter> and L<constant>.
 
 =cut

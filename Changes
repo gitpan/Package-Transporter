@@ -1,4 +1,11 @@
 
+0.3 09 February 2010
+	- fixed Symbol::array_indices (wrong order of args to enumerated_values)
+	- fixed Application::has_properties (wouldn't receive $_[1] due to missing shift)
+	- removed concept of propagation; introduced symbol mix
+	- removed special package '*', taken over by main
+	- added mix_in: as a keyword parameter to import
+
 0.2 02 February 2010
 	- public release
 
