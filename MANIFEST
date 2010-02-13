@@ -18,7 +18,6 @@ lib/Package/Transporter/Package.pm
 lib/Package/Transporter/Package.pod
 lib/Package/Transporter/Symbol.pm
 lib/Package/Transporter/Symbol/Array_Indices.pm
-lib/Package/Transporter/Symbol/Class_Constants.pm
 lib/Package/Transporter/Symbol/Enumerated_Values.pm
 lib/Package/Transporter/Symbol/Exporter_Export.pm
 lib/Package/Transporter/Symbol/Lower_Case_Values.pm

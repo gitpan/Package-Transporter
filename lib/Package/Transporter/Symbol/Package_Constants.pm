@@ -13,7 +13,7 @@ sub package_constants {
 
 	my $properties = Package::Transporter::binary_properties(1,
 		[16, 32, 64, 128, 256],
-		[SCP_PUBLIC, MIX_IMPLICIT, SYM_COMPLEMENT]);
+		[SCP_PUBLIC, MIX_IMPLICIT]);
 
 	my $symbols = $self->named_values($prefix, undef, @_);
 	$self->application('constant_function', $properties, @$symbols);

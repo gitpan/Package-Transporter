@@ -378,6 +378,10 @@ The sweeper. Removes the object from the Package::Transporter class with the int
 
 This is the first public release.
 
+Transporter stores data in package attributes, which aren't covered when you serialize an object with Data::Dumper or similar tools. With regards to its own data, persistence isn't a concept built into Transporter. The data of Transporter is considered a temporary affair of the compilation phase, although you are free to use it afterwards.
+
+Perl objects implemented via array references can be serialized and loaded later as long as the structure of the attributes doesn't change. Note that the enumeration of attributes is done in the order their names are given. If you change the order, you change the structure. Even appending a new name at the end of the existing attributes might change the structure, because it changes enumeration in derived classes. This limitation is highlighted, because Perl objects are traditionally implemented as hash references.
+
 
 =head2 WISHLIST
 
@@ -422,5 +426,13 @@ The manual page for L<Package::Transporter::Package> contains the details
 of using and extending Package::Transporter.
 
 Different approaches are provided by the Perl modules L<Exporter> and L<constant>.
+
+The following packages provide support for objects as array references and are therefore loosely related to Transporter: L<Class-Gomor> (there are more, but I can't find them right now).
+
+The following packages treat arrays as objects, which Transporter is not about, but that also clarifies things: 
+L<List::oo>, 
+L<Class-Builtin>, 
+L<Devel-Ladybug>, and
+L<Object-Array>.
 
 =cut

@@ -3,13 +3,12 @@ use strict;
 use warnings;
 use Carp qw();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 our $DEBUG = 0;
 
 my @EXPORT = qw(QTG_AUTOMATIC QTG_NONE LSP_TEMPORARY LSP_PERMANENT 
-	STG_COMPLETED STG_PROTOTYPE
-	SCP_PRIVATE SCP_PUBLIC MIX_EXPLICIT MIX_IMPLICIT SYM_EXCLUSIVE
-	SYM_COMPLEMENT IMP_INSTANT IMP_ON_DEMAND UND_NEVER UND_TRIGGERED);
+	STG_COMPLETED STG_PROTOTYPE SCP_PRIVATE SCP_PUBLIC MIX_EXPLICIT
+	MIX_IMPLICIT IMP_INSTANT IMP_ON_DEMAND UND_NEVER UND_TRIGGERED);
 
 # symbol properties
 
@@ -30,17 +29,14 @@ sub SCP_PUBLIC() { 1+2**4 };
 sub MIX_EXPLICIT() { 0+2**5 };
 sub MIX_IMPLICIT() { 1+2**5 };
 
-sub SYM_EXCLUSIVE() { 0+2**6 };
-sub SYM_COMPLEMENT() { 1+2**6 };
+sub IMP_INSTANT() { 0+2**6 };
+sub IMP_ON_DEMAND() { 1+2**6  };
 
-sub IMP_INSTANT() { 0+2**7 };
-sub IMP_ON_DEMAND() { 1+2**7  };
+sub UND_NEVER() { 0+2**7 };
+sub UND_TRIGGERED() { 1+2**7 };
 
-sub UND_NEVER() { 0+2**8 };
-sub UND_TRIGGERED() { 1+2**8 };
-
-#sub UPD_NONE() { 0+2**9 }; # reserved
-#sub UPD_AUTOMATIC() { 1+2**9 }; # reserved
+#sub UPD_NONE() { 0+2**8 }; # reserved
+#sub UPD_AUTOMATIC() { 1+2**8 }; # reserved
 
 
 require Package::Transporter::Package;
@@ -138,9 +134,7 @@ sub _mix {
 	my $properties = [SCP_PRIVATE, MIX_EXPLICIT];
 	foreach my $application (@_) {
 		my $selected = $pkg2->selected_symbols($application);
-
-		my $mode = $application->symbols_mix();
-		$pkg1->import_symbols($mode, $selected);
+		$pkg1->add_symbols($selected);
 		my $clone = $application->clone();
 		$clone->set_properties($properties);
 		$pkg1->add_application($clone);
@@ -213,7 +207,7 @@ PROP:	foreach my $property (@$properties) {
 			if ($value) {
 				$result |= $position; 
 			} else {
-				$result &= ~ (2 ** $position);
+				$result &= ~ $position;
 			}
 			next PROP;
 		}

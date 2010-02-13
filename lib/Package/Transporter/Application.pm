@@ -12,13 +12,14 @@ sub ATB_DATA() { 3 };
 
 my @EXPORT = qw(ATB_NAME ATB_PROPERTIES ATB_ARGUMENTS ATB_DATA);
 sub import { # forward to Package::Transporter::_import_subroutines
-	return(Package::Transporter::_import_subroutines((caller())[0], \@EXPORT, @_));
+	return(Package::Transporter::_import_subroutines(
+		       (caller())[0], \@EXPORT, @_));
 }
 
 our $AUTOLOAD;
 sub AUTOLOAD { # forward to Package::Transporter::_AUTOLOAD
-	Package::Transporter::_AUTOLOAD(sub{eval shift}, __PACKAGE__, 'Application',
-		$AUTOLOAD, @_)
+	Package::Transporter::_AUTOLOAD(sub{eval shift}, __PACKAGE__,
+		'Application', $AUTOLOAD, @_)
 }
 
 my $PROPERTY_RANGE = [16, 32, 64, 128, 256];
@@ -90,14 +91,6 @@ sub is_implicit_mix {
 	return(($_[0][ATB_PROPERTIES] & MIX_IMPLICIT) > 1);
 }
 
-sub is_exclusive_symbols {
-	return(($_[0][ATB_PROPERTIES] & SYM_EXCLUSIVE) == 0);
-}
-
-sub is_complementing_symbols {
-	return(($_[0][ATB_PROPERTIES] & SYM_COMPLEMENT) > 1);
-}
-
 sub is_instant_implementation {
 	return(($_[0][ATB_PROPERTIES] & IMP_INSTANT) == 0);
 }
@@ -112,11 +105,6 @@ sub is_never_undo {
 
 sub is_triggered_undo {
 	return(($_[0][ATB_PROPERTIES] & UND_TRIGGERED) > 1);
-}
-
-sub symbols_mix {
-	my $value = (($_[0][ATB_PROPERTIES] & SYM_EXCLUSIVE) > 1) ? 1 : 0;
-	return($value+SYM_EXCLUSIVE);
 }
 
 sub selected_symbols {

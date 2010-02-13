@@ -3,7 +3,7 @@ package CF2;
 use Package::Transporter sub{eval shift};
 BEGIN {
 	Package::Transporter->new()
-	->class_constants('IS_', 'ON_SALE' => 1);
+	->package_constants('IS_', 'ON_SALE' => 1);
 }
 
 my $apples = IS_ON_SALE;

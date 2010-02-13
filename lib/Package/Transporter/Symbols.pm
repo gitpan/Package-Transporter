@@ -17,21 +17,13 @@ sub add {
 
 	foreach my $symbol (@$symbols) {
 		my $name = $symbol->get_name();
-		if (exists($self->{$name}) and $self->{$name}->is_completed_stage()) {
-			Carp::confess("Symbol '$name' already exists.");
+		if (exists($self->{$name})) {
+			my $existing = $self->{$name};
+			return if($existing->get_id eq $symbol->get_id);
+			if($existing->is_completed_stage()) {
+				Carp::confess("Symbol '$name' already exists.");
+			}
 		}
-		$self->{$name} = $symbol;
-	}
-	return;
-}
-
-
-sub complement {
-	my ($self, $symbols) = (shift, shift);
-
-	foreach my $symbol (@$symbols) {
-		my $name = $symbol->get_name();
-		next if (exists($self->{$name}));
 		$self->{$name} = $symbol;
 	}
 	return;

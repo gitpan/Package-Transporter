@@ -9,7 +9,7 @@ my %VALUES = ();
 sub random_values {
 	my ($self, $prefix, $default) = (shift, shift, shift);
 
-	my $properties = Package::Transporter::binary_properties(1, [2, 4], $default);
+	my $properties = Package::Transporter::binary_properties(1, [2, 4, 8], $default);
 
 	my @symbols = ();
 	foreach my $argument (@_) {

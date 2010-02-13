@@ -111,18 +111,7 @@ sub lookup_applications {
 
 
 sub selected_symbols { return($_[1]->selected_symbols($_[0][ATB_SYMBOLS])); }
-sub import_symbols {
-	my ($self, $mode) = (shift, shift);
-
-	if($mode == SYM_EXCLUSIVE) {
-		$self->[ATB_SYMBOLS]->add(@_);
-	} elsif($mode == SYM_COMPLEMENT) {
-		$self->[ATB_SYMBOLS]->complement(@_);
-	} else {
-		Carp::confess("Unknown symbol import mode '$mode'.\n");
-	}
-	return;
-}
+sub add_symbols { shift->[ATB_SYMBOLS]->add(@_); return; }
 
 
 sub minimize {
@@ -180,6 +169,9 @@ sub mix_along_hierarchy {
 	while($path =~ s,::\w+$,,s) {
 		push(@hierarchy, $path);
 	}
+#	if($DEBUG) {
+#		print STDERR "Attempting to mix packages (", join(' / ', @hierarchy), ")\n";
+#	}
 	
 	Package::Transporter::mix_implicit($self, @hierarchy);
 	return;

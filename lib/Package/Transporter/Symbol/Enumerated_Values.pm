@@ -8,7 +8,7 @@ use Package::Transporter::Symbol;
 sub enumerated_values {
 	my ($self, $prefix, $default, $start) = (shift, shift, shift, shift);
 
-	my $properties = Package::Transporter::binary_properties(1, [2, 4], $default);
+	my $properties = Package::Transporter::binary_properties(1, [2, 4, 8], $default);
 
 	unless (defined($start)) {
 		my $count = $self->symbols->lookup_prefixed($prefix);

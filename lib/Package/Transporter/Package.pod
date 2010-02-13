@@ -53,6 +53,9 @@ will give you the right object, like in the following example:
 	my $pkg = Package::Transporter->new(sub{eval shift});
 	print ref($pkg);
 
+Keep in mind that the visit point 'sub{eval shift}' counts as a lexically scoped block, so you won't see any variable declared via 'my' outside that block. Yes, it would be most useful and a less surprising behaviour of eval.
+
+
 =head2 Transactions
 
 Package::Transporter::Package provides a simple transactional mode via the methods
@@ -164,10 +167,6 @@ Whether the application is available to other packages or not.
 =item B<Mix> - MIX_EXPLICIT(*) / MIX_IMPLICIT
 
 Whether a mix will have to specify the application explicitly or not.
-
-=item B<Symbol Mix> - SYM_EXCLUSIVE(*) / SYM_COMPLEMENT
-
-Whether the symbols associated are mixed exclusively (existing symbols are an error) or whether they complement existing symbols.
 
 =item B<Implementation> - IMP_INSTANT(*) / IMP_ON_DEMAND
 

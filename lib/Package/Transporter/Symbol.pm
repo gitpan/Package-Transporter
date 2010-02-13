@@ -4,12 +4,14 @@ use warnings;
 
 use Package::Transporter sub{eval shift};
 
-sub ATB_NAME() { 0 };
-sub ATB_VALUE() { 1 };
-sub ATB_PROPERTIES() { 2 };
+sub ATB_ID() { 0 };
+sub ATB_NAME() { 1 };
+sub ATB_VALUE() { 2 };
+sub ATB_PROPERTIES() { 3 };
 
-my $PROPERTY_RANGE = [2, 4];
+my $PROPERTY_RANGE = [2, 4, 8];
 
+my %IDS = ();
 sub new {
 	my ($class, $name, $value, $properties) = (shift, shift, shift, shift);
 
@@ -17,7 +19,15 @@ sub new {
 		$properties = Package::Transporter::binary_properties(1,
 			$PROPERTY_RANGE, $properties);
 	}
-	my $self = [$name, $value, $properties || 1];
+	my $id;
+	while(1) {
+		$id = sprintf('%08x', int(rand(2**32-1)));
+		next if (exists($IDS{$id}));
+		last;
+	}
+	$IDS{$id} = 1;
+
+	my $self = [$id, $name, $value, $properties || 1];
 	bless($self, $class);
 	Internals::SvREADONLY(@{$self}, 1);
 
@@ -106,6 +116,7 @@ sub build_arguments {
 	return(@arguments);
 }
 
+sub get_id { return($_[0][ATB_ID]); }
 sub get_name { return($_[0][ATB_NAME]); }
 sub get_name_short { $_[0][ATB_NAME] =~ m,^(\w+_)?(.*)$,; return($2); }
 sub get_name_lc { return(lc($_[0][ATB_NAME])); }
