@@ -1,13 +1,31 @@
-Transporter - encourages the use of constant functions
+Package::Transporter - encourages the use of constant functions
 
-Through convenient management of constant functions a 
-a greater expressiveness of Perl5 code can be achieved,
-while keeping fundamental programming practices intact.
-Constant functions result in an inlined value, meaning that
-no actual subroutine call is performed by perl internally.
+Expressiveness and robustness of Perl5 code can be increased with
+constant functions. This module automates their creation. Example
+of a manually crafted set:
 
-Transporter generates Perl code based on very simple rules defined by
-the programmer. The generated code is added to modules via an
-explicitly declared visit point. Transporter won't do magic
-(something implicit in the background) via arbitrary symbol table
-manipulations.
+	sub ABT_NAME() { 1 };
+	sub ABT_TYPE() { 2 };
+	sub ABT_STOCK() { 3 };
+	sub ABT_PRICE() { 4 };
+
+Example of achieving the same through Package::Transporter:
+
+        use Package::Transporter sub{eval shift}, sub {
+                $_[0]->array_indices('ATB_', [],
+                        qw(NAME  TYPE  STOCK  PRICE));
+        };
+
+The convenience function array_indices automates the enumeration, which is
+a subtle feature. By using constant functions for array
+indices or hash keys, the source for structural errors can be kept
+in one place (where the functions are defined). That is definitely an
+improvement. But only automation actually eliminates the source, which is
+the motivation behind Package::Transporter.
+
+Implicit sharing of constant functions (and other definitions like
+automatically generated accessors) across packages is also supported by
+Package::Transporter. Either along the package hierarchy (stop at every ::
+and look if there are public definitions) or along the package names in
+@ISA. The latter practically means that inheritance is available for
+methods as well as attributes, even if the object is an array reference.

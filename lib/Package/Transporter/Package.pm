@@ -209,8 +209,10 @@ sub mix_in_explicit {
 
 
 sub retrieve {
-	my @values = map($_->value(), 
-		@{shift->[ATB_SYMBOLS]->matching_prefix(@_)});
+	my ($self) = (shift);
+	
+	my @values = map($self->[ATB_SYMBOLS]->lookup_name($_)->get_value(), 
+		@_);
 	return(@values);
 }
 

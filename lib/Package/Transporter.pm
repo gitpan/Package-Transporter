@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Carp qw();
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 our $DEBUG = 0;
 
 my @EXPORT = qw(QTG_AUTOMATIC QTG_NONE LSP_TEMPORARY LSP_PERMANENT 
@@ -159,6 +159,10 @@ sub import {
 	mix_implicit($pkg, 'main');
 
 	foreach my $arg (@_) {
+		if(ref($arg) eq 'CODE') {
+			$arg->($pkg);
+			next;
+		}
 		my ($cmd, $name) = split(':', $arg, 2);
 		if($cmd eq 'mix_in') {
 			if($name eq 'isa') {

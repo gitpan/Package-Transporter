@@ -1,11 +1,9 @@
 package CF3;
 use strict;
 
-use Package::Transporter sub{eval shift};
-BEGIN {
-	Package::Transporter->new()
-	->array_indices('ATB_', [], qw(NAME  TYPE  STOCK  PRICE));
-}
+use Package::Transporter sub{eval shift}, sub {
+	$_[0]->array_indices('ATB_', [], qw(NAME  TYPE  STOCK  PRICE));
+};
 
 #...
 sub sell {

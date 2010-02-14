@@ -15,11 +15,9 @@ is about compile-time.
 	package CF3;
 	use strict;
 
-	use Package::Transporter sub{eval shift}, 'mix_in:*';
-	BEGIN {
-		Package::Transporter->new()
-		->array_indices('ATB_', [], qw(NAME  SALE  STOCK  PRICE));
-	}
+	use Package::Transporter sub{eval shift}, 'mix_in:*', sub {
+		$_[0]->array_indices('ATB_', [], qw(NAME  SALE  STOCK  PRICE));
+	};
 
 	#...
 	sub sell {
@@ -135,11 +133,9 @@ older than Perl, but not commonly found in Perl.
 	package CF2;
 	use strict;
 
-	use Package::Transporter sub{eval shift};
-	BEGIN {
-		Package::Transporter->new()
-		->class_constants('IS_', 'ON_SALE' => 1);
-	}
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->class_constants('IS_', 'ON_SALE' => 1);
+	};
 
 	my $apples = IS_ON_SALE;
 	my $oranges = 1;
@@ -242,12 +238,10 @@ provided via Package::Transporter (see example RELCON1 below).
 	package RELCON1;
 	use strict;
 
-	use Package::Transporter sub{eval shift};
-	BEGIN {
-		my $pkg = Package::Transporter->new();
-		$pkg->array_indices('T_', [],
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->array_indices('T_', [],
 			qw(SEC MIN HOUR MDAY MON YEAR WDAY YDAY ISDST));
-	}
+	};
 
 =head1 USAGE
 
@@ -272,16 +266,13 @@ packages. Example:
 
 	package CF5;
 	use strict;
-	use Package::Transporter sub{eval shift};
-
-	BEGIN {
-		my $pkg = Package::Transporter->new();
-		$pkg->package_constants('IS_', 'TRUE' => 1, 'FALSE' => 0);
-	}
-
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->package_constants('IS_', 'TRUE' => 1, 'FALSE' => 0);
+	};
+	
 	package CF6;
 	use Package::Transporter sub{eval shift}, 'mix_in:CF5';
-
+	
 	die() if (IS_TRUE == IS_FALSE);
 
 Further details on the usage can be found in the documentation for the
@@ -289,7 +280,7 @@ package Package::Transporter::Package.
 
 =head2 Mix Ins
 
-The optional second argument in the use statement specifies the mix
+Optional arguments in the use statement can specify the mix
 with other packages. Only such external applications are mixed in, which have
 the properties SCP_PUBLIC and MIX_IMPLICIT set.
 
@@ -325,13 +316,14 @@ interface instead of relying on implementation details. The 'sub'
 keyword isn't pure luxury on top of a 'flexible and powerful symbol
 table', but a product of intelligence on top of raw force.
 
-The default visit point should be the loading of the Package::Transporter
-module via use, but that isn't enforced. Upon loading, Package::Transporter
-will create an object for the calling package to store package details
-like the visit point. The object is monadic within a package and of
-type Package::Transporter::Package. Meaning that 'Package::Transporter->new' won't give
-you a fresh object, but rather the one belonging to the current
-package.
+The default visit point should be the loading of the
+Package::Transporter module via use, but that isn't enforced. Upon
+loading, Package::Transporter will create an object for the calling
+package to store package details like the visit point. The object is
+monadic within a package and of type
+Package::Transporter::Package. Meaning that
+'Package::Transporter->new' won't give you a fresh object, but rather
+the one belonging to the current package.
 
 With the package object, you can basically do three things:
 

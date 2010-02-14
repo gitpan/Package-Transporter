@@ -108,8 +108,10 @@ Obtain full name/value-pairs. Calling parameters are a name prefix, the symbol p
 
 =head2 Symbol Properties
 
-A symbol has the following properties. Values marked with an
-asterisk are the default.
+A symbol has the following properties. Values marked with an asterisk
+are the default. The values are only available after Transporter has
+been use'd, which means you need a separate BEGIN block (see
+examples/CF4-long_definition.pl).
 
 =over 8
 
@@ -156,7 +158,9 @@ Load the specified file, perform search & replace using the symbol name/value (n
 
 =head2 Application Properties
 
-An application has the following properties. Values marked with an asterisk are the default.
+An application has the following properties. Values marked with an asterisk are the default. The values are only available after Transporter has
+been use'd, which means you need a separate BEGIN block (see
+examples/CF4-long_definition.pl).
 
 =over 8
 

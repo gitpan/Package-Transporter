@@ -1,12 +1,10 @@
 package CF4;
 use strict;
 
-use Package::Transporter sub{eval shift};
-BEGIN {
-	my $pkg = Package::Transporter->new();
-	$pkg->random_values('ATB_', [], qw(NAME  TYPE  STOCK  PRICE));
-	$pkg->application('constant_function', [], 'ATB_');
-}
+use Package::Transporter sub{eval shift}, sub {
+	$_[0]->random_values('ATB_', [], qw(NAME  TYPE  STOCK  PRICE));
+	$_[0]->application('constant_function', [], 'ATB_');
+};
 
 #...
 sub sell {

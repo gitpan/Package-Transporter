@@ -17,7 +17,7 @@ sub array_indices {
 #	unshift(@$properties, SCP_PUBLIC, MIX_IMPLICIT); # for _base version
 
 	my $count = $#{$self->symbols->lookup_prefixed($prefix)};
-	my $iterator = sub { my $rv = $count; $count += 1; return($rv); };
+	my $iterator = sub { return($count += 1); };
 
 	my $symbols = $self->enumerated_values($prefix, [], $iterator, @_);
 	$self->application('constant_function', $properties, @$symbols);

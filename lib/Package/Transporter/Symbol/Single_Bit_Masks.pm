@@ -11,8 +11,8 @@ sub single_bit_masks {
 	my $properties = Package::Transporter::binary_properties(1,
 		[16, 32, 64, 128, 256], $default);
 
-	my $count = 2 ** scalar(@{$self->symbols->lookup_prefixed($prefix)});
-	my $iterator = sub { my $rv = $count; $count *= 2; return($rv); };
+	my $count = 2 ** $#{$self->symbols->lookup_prefixed($prefix)};
+	my $iterator = sub { return($count *= 2); };
 
 	my $symbols = $self->enumerated_values($prefix, [], $iterator, @_);
 	$self->application('constant_function', $properties, @$symbols);

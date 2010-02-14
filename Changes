@@ -1,7 +1,12 @@
 
+0.06	14 February 2010
+	- additional terse interface without BEGIN block
+	- added basic tests
+	- fixed starting value and unified implementation of iterator
+
 0.05	14 February 2010
 	- re-introduced iterator in Enumerated_Values
-	- added 
+	- added convenience method single_bit_basks
 
 0.04	13 February 2010
 	- each symbol gets its own unique id in favor of property 'symbol mix'
