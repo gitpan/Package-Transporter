@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Carp qw();
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 our $DEBUG = 0;
 
 my @EXPORT = qw(QTG_AUTOMATIC QTG_NONE LSP_TEMPORARY LSP_PERMANENT 

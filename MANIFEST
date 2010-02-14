@@ -25,6 +25,7 @@ lib/Package/Transporter/Symbol/Named_Values.pm
 lib/Package/Transporter/Symbol/Package_Constants.pm
 lib/Package/Transporter/Symbol/Public_Methods.pm
 lib/Package/Transporter/Symbol/Random_Values.pm
+lib/Package/Transporter/Symbol/Single_Bit_Masks.pm
 lib/Package/Transporter/Symbols.pm
 Makefile.PL
 MANIFEST			This list of files

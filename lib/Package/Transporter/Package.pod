@@ -81,9 +81,9 @@ The following list gives an overview of the currently shiped modules in the Pack
 
 =over 8
 
-=item $pkg->B<enumerated_values>('ATB_', [], undef, qw(PRICE));
+=item $pkg->B<enumerated_values>('ATB_', [], $iterator, qw(STOCK  PRICE));
 
-Enumerate values for the symbols in ascending order. Calling parameters are a name prefix, the symbol properties, the starting value for counting (undef for automatic), and the names.
+Enumerate values for the symbols in ascending order. Calling parameters are a name prefix, the symbol properties, an iterator for automatic counting, and the names.
 
 
 =item $pkg->B<random_values>('ATB_', [], qw(PRICE));
@@ -143,7 +143,7 @@ Create subroutines from the symbols, where the name is the subroutine name and t
 
 =item $pkg->application('B<managed_attributes_abo_simple>', [], 'ATB_');
 
-Create managed attributes (get_/set_-style) from the symbols, suitable for array based object (abo). Calling parameter are the method name, the application properties, and the symbol names or prefixes (indicated by trailing _).
+Create managed attributes (get_/set_-style) from the symbols, suitable for array based object (abo). Calling parameter are the method name, the application properties, and the symbol names or prefixes (indicated by trailing _). The ugly name indicates that it is experimental.
 
 =item $pkg->application('B<include_file:./usefull.pl>', [], 'ATB_');
 
@@ -191,18 +191,18 @@ These are combination of symbol generation and application. No return value.
 
 =over 8
 
-=item $pkg->B<array_indices>('ATB_', [], qw(PRICE));
+=item $pkg->B<array_indices>('ATB_', [], qw(NAME  PRICE));
 
 A combination of enumerated_values and constant_function. Calling parameter are a name prefix, the application properties, and the names. 
 
-=item $pkg->B<global_constants>('IS_', [], qw(TRUE));
+=item $pkg->B<single_bit_masks>('FLAG_', [], qw(MOVING  TURNING));
 
-A combination of named_values and constant_function. Calling parameter are a name prefix, the application properties, and the names. 
+Like array indices, but with an enumerator to multiply by two, not to add one. 
 
+=item $pkg->B<package_constants>('IS_', qw(TRUE  FALSE));
 
-=item $pkg->B<class_constants>('IS_', [], qw(TRUE));
+A combination of named_values and constant_function with SCP_PUBLIC and MIX_IMPLICIT set. Calling parameter are a name prefix, and the names. 
 
-Like global_constants, but without universal propagation.
 
 =back
 
@@ -235,7 +235,11 @@ Find an application by name. Calling parameter is one name; return values are th
 
 Call the sweep code collected from applications marked with UND_TRIGGERED. Also remove symbols marked as LSP_TEMPORARY. No calling parameter; no return value.
 
-=item $pkg->B<mix_isa>();
+=item $pkg->B<mix_along_hierarchy>();
+
+Search through the own package name for other packages using Transporter; package A:B:C will attempt to mix in from A:B and A. No calling parameter; no return value.
+
+=item $pkg->B<mix_along_isa>();
 
 Iterate through the package names in @ISA and mix them into the current package. No calling parameter; no return value.
 
@@ -243,7 +247,7 @@ Iterate through the package names in @ISA and mix them into the current package.
 
 Mix the applications (SCP_PUBLIC, MIX_IMPLICIT) and the associated symbols of the specified package into the current package.
 
-=item $pkg->B<mix_explicit>('CF5');
+=item $pkg->B<mix_explicit>('CF5', qw(ATB_PRICE));
 
 Like mix, but for MIX_EXPLICIT.
 
@@ -288,29 +292,6 @@ plus attributes (missing). With Perl6 or any modern language,
 Package::Transporter has no point.
 
 
-=head1 WISHLIST
-
-The author hopes that one day there will be a 'use stricter'. Which
-does, among other things:
-
-=over 8
-
-=item * Make its effect irreversible. Meaning there is no 'no stricter'.
-
-=item * Introduce 2 as irreversible flag in Internals::SvREADONLY(..., 2); with the purpose of locking the readonly flag.
-
-=item * Let Internals::SvREADONLY also prohibt re-blessing a locked reference, re-declaring a package namespace and re-defining a subroutine.
-
-=item * Complain about the unquoted string in { key => 'value' }. Yes, there is an unquoted string and it should be treated as such. Or at least give precedence to constant functions.
-
-=item * Make the namespace of a package read-only for other packages. (Indirect access to the symbol table via '::' is read-only.).
-
-=item * Disable direct access to the symbol table. No \*, no \%::. Or at least restricted to the current package.
-
-=item * Let 'package' return a reference to or name of the namespace.
-
-=back
-
 =head1 AUTHOR
 
 Winfried Trumper E<lt>pub+perl(a)wt.tuxomania.netE<gt>
@@ -318,7 +299,7 @@ Winfried Trumper E<lt>pub+perl(a)wt.tuxomania.netE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1999,2010 Winfried Trumper
+Copyright (C) 2009,2010 Winfried Trumper
 
 This module is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
@@ -326,6 +307,6 @@ under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-Exporter
+L<Transporter>
 
 =cut

@@ -376,7 +376,9 @@ The sweeper. Removes the object from the Package::Transporter class with the int
 
 =head1 KNOWN BUGS AND LIMITATIONS
 
-This is the first public release.
+This is the first public release. Also see the Todo file.
+
+Subroutine attributes are not recognized. While setting such attributes is easy, getting hold of them is difficult to get right. Which might be the reason why they're not widely used.
 
 Transporter stores data in package attributes, which aren't covered when you serialize an object with Data::Dumper or similar tools. With regards to its own data, persistence isn't a concept built into Transporter. The data of Transporter is considered a temporary affair of the compilation phase, although you are free to use it afterwards.
 
@@ -407,6 +409,7 @@ does, among other things:
 =back
 
 
+
 =head1 AUTHOR
 
 Winfried Trumper E<lt>pub+perl(a)wt.tuxomania.netE<gt>
@@ -434,5 +437,7 @@ L<List::oo>,
 L<Class-Builtin>, 
 L<Devel-Ladybug>, and
 L<Object-Array>.
+
+The package L<POE> is features a lot of constant functions
 
 =cut

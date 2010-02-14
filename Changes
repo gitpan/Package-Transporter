@@ -1,4 +1,8 @@
 
+0.05	14 February 2010
+	- re-introduced iterator in Enumerated_Values
+	- added 
+
 0.04	13 February 2010
 	- each symbol gets its own unique id in favor of property 'symbol mix'
 	- STG_* was not working due to a wrong range of properties
