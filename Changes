@@ -1,3 +1,7 @@
+0.80	14 March 2010
+        - merged with the fork Package::Autoloader v0.15
+	- bumped the version number to indicate the huge change
+
 0.07	14 March 2010
 	- informal release only
 
