@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Rule - a general rule class for Package::Transporter
+Package::Transporter::Rule::Standard - standard rule class
 
 =head1 SYNOPSIS
 

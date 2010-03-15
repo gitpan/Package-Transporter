@@ -10,7 +10,7 @@ use Package::Transporter sub{eval shift}, sub {
 sub sell {
 	my ($self, $amount) = @_;
 
-#	return if(ATB_SALE == IS_FALSE);
+#	return if (ATB_SALE == IS_FALSE);
 	$self->[ATB_STOCK] -= $amount;
 	my $costs = $amount * $self->[ATB_PRICH];
 

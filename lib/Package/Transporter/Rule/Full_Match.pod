@@ -1,0 +1,21 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Rule::Full_Match - also match the package name
+
+=head1 SYNOPSIS
+
+	use Package::Transporter::Rule::Full_Match;
+	my $rule = Package::Transporter::Rule::Full_Match
+		->new($generator, $pkg_name, $sub_name, $argc_match);
+
+=head1 DESCRIPTION
+
+An extension of the standard rule class with extra matching on the package name. Example: $pkg_name = 'ABC::(DEF|GHI)'. No longer covered by tests, so it might work or not.
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

@@ -1,0 +1,34 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Pre_Selection - structure of internal rule tree
+
+=head1 DESCRIPTION
+
+This package can't be used on its own. It maintains the internal tree of drains and potentials. The structure for the Synopsis looks like:
+
+	$RULES = bless( {
+		'' => {
+			'' => [	rule for $yn ],
+		},
+		'>>' => {
+			'IS_' => [ rule for ::Constant_Function::Flatened ],
+		},
+		'Synopsis' => {
+			'salut_' => [ rule for ::Hello_Anything ],
+		},
+		'Synopsis<<' => { # deleted after use
+			'ATB_' => [ rule for ::Constant_Function::Enumerated ],
+		},
+		'Synopsis::' => {
+			'hello_world' => [ rule for ::Export ],
+		}
+	}, 'Package::Transporter::Pre_Selection' );
+	
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

@@ -11,7 +11,7 @@ sub ATB_VISIT_POINT() { 1 };
 sub ATB_SEARCH_PATH() { 2 };
 sub ATB_PATH_PARTITION() { 3 };
 
-use Package::Transporter::Rule;
+use Package::Transporter::Rule::Standard;
 use Package::Transporter::Pre_Selection;
 use Package::Transporter::Path_Partition;
 use Package::Transporter::Generator;
@@ -96,7 +96,7 @@ sub create_generator {
 
 	my $generator;
 	if ($rule =~ m,(^|::)([\w_]+($|::))+,) {
-		$generator = Package::Transporter::Generator::new_class($rule, $self);
+		$generator = Package::Transporter::Generator::new_class($rule, $self, @_);
 	} else {
 		my $code = sprintf(q{
 sub($$;@) {
@@ -116,7 +116,7 @@ sub register_potential {
 
 	if (scalar(@_) == 0) { # no further arguments
 		if (ref($potential) eq 'ARRAY') {
-			$potential = Package::Transporter::Rule->new(@$potential);
+			$potential = Package::Transporter::Rule::Standard->new(@$potential);
 			$RULES->register_rules($potential, $potential->pre_select);
 		} elsif (Scalar::Util::blessed($potential)) {
 			$RULES->register_rules($potential, $potential->pre_select);
@@ -161,7 +161,7 @@ sub register_potential {
 		}
 	}
 	
-	$potential = Package::Transporter::Rule->new($generator, \@pkg_names, @_);
+	$potential = Package::Transporter::Rule::Standard->new($generator, \@pkg_names, @_);
 	$RULES->register_rules($potential, $potential->pre_select);
 
 	return($potential);
@@ -207,7 +207,7 @@ sub register_drain {
 }
 
 sub implement_drain {
-	my ($self, $sub_name) = (shift, shift);
+	my ($self) = @_;
 
 	my $generators = $RULES->collect_generators(
 		$self->[ATB_SEARCH_PATH],
@@ -224,7 +224,19 @@ sub implement_drain {
 
 	$RULES->release($self->[ATB_PKG_NAME]);
 
-	return();
+	return;
+}
+
+sub implement_potential {
+	my ($self, $sub_name) = (shift, shift);
+
+        my $generator = $self->find_generator($sub_name);
+        unless (defined($generator)) {
+                return(Package::Autoloader::Generator::failure(undef, $sub_name,
+ 'package object: no rule found'));
+        }
+
+        return($generator->run($self, $self->[ATB_PKG_NAME], $sub_name));
 }
 
 sub autoload {

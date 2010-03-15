@@ -14,7 +14,7 @@ sub ATB_SUGGESTSIONS() { 1 };
 sub _init {
 	my ($self) = (shift);
 
-	unless(defined($self->[ATB_SUGGESTSIONS])) {
+	unless (defined($self->[ATB_SUGGESTSIONS])) {
 		$self->[ATB_SUGGESTSIONS] =
 			Package::Transporter::Generator::Suggested_Use::Suggestions->new();
 	}

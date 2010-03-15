@@ -1,0 +1,22 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Rule::Gone - make a rule ineffective
+
+=head1 SYNOPSIS
+
+	use Package::Transporter::Rule;
+	$rule->release;
+
+=head1 DESCRIPTION
+
+This class changes the public methods of a rule object, so that it's practically ineffective. The ->release method of the standard rule object empties the data of it and changes the class to Package::Transporter::Rule::Gone.
+
+Making a rule ineffective is cheaper than finding and removing it from the tree in Pre_Selection.
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

@@ -42,9 +42,9 @@ sub run {
 
 my %CLASSES = ();
 sub new_class {
-	my ($name, $pkg) = @_;
+	my ($name) = (shift);
 
-	unless(exists($CLASSES{$name})) {
+	unless (exists($CLASSES{$name})) {
 		my $class;
 		if (substr($name, 0, 2) eq '::') {
 			$class = "Package::Transporter::Generator$name";
@@ -59,10 +59,10 @@ sub new_class {
 		require $class_for_require;
 		$CLASSES{$name} = $class;
 	}
-	return($CLASSES{$name}->new($pkg));
+	return($CLASSES{$name}->new(@_));
 }
 
-sub failure {
+sub failure($$;@) {
 	my ($pkg_name, $sub_name, $what) = @_;
 	my @where = caller;
 	my $failure = sub {

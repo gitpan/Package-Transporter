@@ -45,8 +45,7 @@ sub matcher {
 			Carp::confess($DBI::errstr);
 		}
 		my $row = $sth->fetchrow_arrayref;
-		return unless (defined($row));
-
+		return(defined($row));
 	});
 }
 

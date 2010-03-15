@@ -2,18 +2,17 @@
 
 =head1 NAME
 
-Package::Transporter - Export, Import, AUTOLOAD, and OO meet
+Package::Transporter - Export, Import, and AUTOLOAD meet under an OO interface
 
 =head1 SYNOPSIS
 
-The following code demonstrates the tasks you can address with Package::Transporter: consume rules and define rules for automated subroutine generation.
-
+Code from the documentation can be found in individual Perl files in the examples directory.
 
 	use Package::Transporter sub{eval shift}, sub {
 		$_[0]->register_drain('::Flatened', 'FOR_ANY', 'IS_',
 			TRUE => 1, FALSE => 0);
 	};
-	print STDOUT ((IS_TRUE == 1) ? 'Ok' : 'Disorder'), "\n";
+	print STDOUT ((IS_TRUE == 1) ? 'True' : 'False'), "\n";
 
 	package Synopsis;
 	use Package::Transporter sub{eval shift}, sub {
@@ -32,8 +31,8 @@ The following code demonstrates the tasks you can address with Package::Transpor
 	package Synopsis::Desc1;
 	use Package::Transporter sub{eval shift};
 	
-	print STDOUT ((IS_TRUE == 1) ? 'Ok' : 'Disorder'), "\n";
-	hello_world(); # first rule - export on demand
+	print STDOUT ((IS_TRUE == 1) ? 'True' : 'False'), "\n";
+	hello_world(); # first register_potential - export on demand
 	
 	
 	package sisponyS::Desc2;
@@ -41,15 +40,12 @@ The following code demonstrates the tasks you can address with Package::Transpor
 	use Package::Transporter sub{eval shift};
 	
 	my $obj = bless( \(my $o = 0), 'sisponyS::Desc2');
-	$obj->salut_monde(); # second rule - definition on demand
+	$obj->salut_monde(); # second register_potential
 
 	exit(0);
 
 
-To check your understanding of what is happening above, see the tests for definedness in the documentation of L<Package::Transporter::Generator::Hello_Anything>. It's really worth reading that documentation first, because the synopsis doesn't tell you what goes on. Code from the documentation can be found in individual Perl files in the examples directory.
-
-The dynamically generated subroutine salut_monde prints Hello plus the second part of its name to the screen. The impartial translation is intentional to stress the key point - this package is not about localisation.
-
+To check your understanding of what is happening above, see the tests for definedness in the documentation of L<Package::Transporter::Generator::Hello_Anything>.
 
 =head1 WARNINGS
 
@@ -59,26 +55,25 @@ The documentation is not keeping up with the development speed and carries fragm
 
 This package allows you to facilitate different origins for subroutine definitions and code in general, which are then passed to eval(). Control over an origin - file system or data base - means control over your program. Keep that in mind to avoid unpleasant surprises.
 
-=head1 PREFACE
+=head1 DESCRIPTION
+
+Package::Transporter provides a concept for automated loading and distribution of subroutines. Subroutines can be loaded from various origins and in various forms. For example as text from a SQL database or more conventionally as references from another package. If a subroutine is immediately implemented during distribution, that is called drain. If a subroutine is implemented on demand, that is called potential.
+
+Automated drain is mostly practical to generate constant functions and to distribute them into packages. Example: 'sub ATB_PRICE() { 0 }' as a symbolic index to the first element of a list - but without giving the full definition manually. Automated potential provides a leaner alternative to export, because you don't have to manually optimize the use of your namespace. Example for manual optimization: 'use POSIX qw(O_EXCL);'
+
+=head2 Motivation
 
 A couple of years ago I made array-based objects the default for my Perl5 code and started to use constant functions instead of strings. It was a little bit scary to notice that in effect my code would work out of the box surprisingly often. Meaning after I fixed any mistakes refused by the compiler. Remaining systematic sources of errors were the manual definition of constant functions and the manual maintenance of @EXPORT. Both are addressed through automation in this module.
 
 Another limitation I encountered is the monolithic approach of the import and AUTOLOAD subroutines. If one module uses them, another can't easily be used in addition. This module addresses the problem by replacing import with visit points and by adding a dispatch to AUTOLOAD.
 
 
-=head1 DESCRIPTION
+=head1 Drain
 
-Package::Transporter is about automated loading and distribution of subroutines. Subroutines can be loaded from various origins and in various forms. For example as text from a SQL database or more conventionally as references from another package. If a subroutine is immediately implemented during distribution, that is called drain. If a subroutine is implemented on demand, that is called potential.
+TBD
 
-Handling drain and potential with one convenient interface implies some compromise between resource use and features.
+=head1 Potential
 
-=head2 Drain
-
-Automated drain is mostly practical to generate related groups of constant functions and to distribute them into groups of packages. 
-
-=head2 Potential
-
-Automated potential provides a leaner alternative to export, because you don't have to manually optimize the use of your namespace. Example for manual optimization: 'use POSIX qw(waitpid);'
 
 Package::Transporter makes AUTOLOAD a two-line subroutine, which forwards all requests into a rule-based dispatch. Thus allowing more than one feature to be based on AUTOLOAD. Actual generation of subroutines is done by generator classes.
 

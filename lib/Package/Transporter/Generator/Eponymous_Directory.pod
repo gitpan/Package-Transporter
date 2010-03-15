@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Eponymous_Directory - require .pl files
+Package::Transporter::Generator::Eponymous_Directory - require .pl files containing subroutine definitions from a directory
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Package::Transporter::Rule;
+package Package::Transporter::Rule::Standard;
 use strict;
 use warnings;
 use Package::Transporter::Rule::Gone;
@@ -81,7 +81,7 @@ sub check {
 	}
 
 	my $args = $self->[ATB_ARGS_MATCH];
-	return($self->[ATB_GENERATOR]) unless(scalar(@$args));
+	return($self->[ATB_GENERATOR]) unless (scalar(@$args));
 	foreach my $i (0 .. $#$args) {
 		return(undef) unless (ref($_[$i]) eq $args->[$i]);
 	}

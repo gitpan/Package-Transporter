@@ -3,27 +3,17 @@ use strict;
 
 package Parent_Class;
 use Package::Transporter sub{eval shift}, sub {
-	$_[0]->register_drain('::Random', 'FOR_FAMILY', 'ATB_',
-		qw(HELLO1  WORLD1));
+	$_[0]->register_drain('::Random', 'FOR_FAMILY',
+		'ATB_', qw(NAME  STOCK  PRICE));
 };
-
-sub yn($) { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
-
-yn(defined(&ATB_HELLO1));
-yn(!potentially_defined('ATB_HELLO1'));
 
 package Child_Class;
 BEGIN {our @ISA = ('Parent_Class')}; # more like 'use parent ...'
 use Package::Transporter sub{eval shift}, sub {
-	$_[0]->register_drain('::Random', 'FOR_SELF', 'ATB_',
-		qw(HELLO2  WORLD2));
+	$_[0]->register_drain('::Random', 'FOR_SELF',
+		'ATB_', qw(SALE));
 };
 
-sub yn($) { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
-
-yn(defined(&ATB_HELLO1));
-yn(!potentially_defined('ATB_HELLO1'));
-
-print STDOUT 'Symbolic Attribute Names: ', ATB_HELLO1, ATB_WORLD2, "\n";
-
+print STDOUT 'ATB_PRICE=', ATB_PRICE, "\n";
+print STDOUT 'ATB_SALE=', ATB_SALE, "\n";
 exit(0);

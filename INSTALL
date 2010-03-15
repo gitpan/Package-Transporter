@@ -1,5 +1,4 @@
-Installation only makes sense to follow the development. Although it
-appears that the interfaces finally settle, anything might
+Installation only makes sense to follow the development. Anything might
 change. Don't expect support for versions other than the current. 
 
 For versions of Perl before 5.10, install MRO::Compat first and enable it
@@ -13,7 +12,7 @@ installation.
 	make test
 	make install
 
-Package::Transporter makes use of the follwoing external modules, most
+Package::Transporter makes use of the follwoing modules, most
 of which are part of the Perl5 core.
 
 	Scalar::Util

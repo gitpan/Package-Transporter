@@ -1,3 +1,7 @@
+0.81	15 March 2010
+	- updated documentation to reflect more of v0.80+
+	- added more Generators
+
 0.80	14 March 2010
         - merged with the fork Package::Autoloader v0.15
 	- bumped the version number to indicate the huge change

@@ -12,7 +12,7 @@ use Package::Transporter sub{eval shift}, sub {
 	}];
 	bless($generator, 'Package::Transporter::Generator');
 
-	my $rule = Package::Transporter::Rule->new($generator,
+	my $rule = Package::Transporter::Rule::Standard->new($generator,
 		['Basic_Test', 'main'], ['tfrv1', 'tfrv3']);
 	$_[0]->register_potential($rule);
 	$_[0]->register_potential($generator, 'FOR_BRANCH', 'tfrv2');

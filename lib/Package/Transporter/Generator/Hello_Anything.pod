@@ -63,6 +63,8 @@ The following code registers two rules for use by AUTOLOAD. It demonstrates the 
 This generator class was only designed to provide an example for the synopsis of
 Package::Transporter. Some boolean tests have been added for this version to document the behaviour in detail. All yn-tests should return 'Yes'.
 
+The dynamically generated subroutine salut_monde prints Hello plus the second part of its name to the screen. The impartial translation is intentional to stress the key point - this package is not about localisation.
+
 The last paragraph of tests should remind you that the method salut_monde springs into existence as a subroutine in the parent class, because it is defined there only.
 
 =head1 ANYTHING ELSE

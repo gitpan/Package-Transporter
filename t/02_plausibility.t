@@ -45,9 +45,9 @@ my $a = time;
 my $found = Package::Transporter::find_generator(['FOR_ANY']);
 ok(!defined($found), 'T008: Impossible ISA value');
 
-use Package::Transporter::Rule;
-my $rule = Package::Transporter::Rule->new(sub{}, '', '');
-ok(ref($rule) eq 'Package::Transporter::Rule',
-	'T009: Package::Transporter::Rule works.');
+use Package::Transporter::Rule::Standard;
+my $rule = Package::Transporter::Rule::Standard->new(sub{}, '', '');
+ok(ref($rule) eq 'Package::Transporter::Rule::Standard',
+	'T009: Package::Transporter::Rule::Standard works.');
 
 exit(0);

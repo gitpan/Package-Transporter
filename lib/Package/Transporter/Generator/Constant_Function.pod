@@ -22,7 +22,7 @@ constant functions ATB_NAME, ..., ATB_PRICE.
 	sub sell {
 		my ($self, $amount) = @_;
 
-	#	return if(ABT_SALE == IS_FALSE);
+	#	return if (ABT_SALE == IS_FALSE);
 		$self->[ATB_STOCK] -= $amount;
 		my $costs = $amount * $self->[ATB_PRICH];
 
