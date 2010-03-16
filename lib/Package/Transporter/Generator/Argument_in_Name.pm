@@ -23,7 +23,7 @@ sub implement {
 	my $defining_pkg = $self->[ATB_PKG]->name;
 	my $sub_base = $sub_name;
 	unless($sub_base =~ s/$self->[ATB_RE]//s) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, "::Argument_in_Name [RE '$self->[ATB_RE]' did not match]"));
+		return($self->failure(undef, $sub_name, "::Argument_in_Name [RE '$self->[ATB_RE]' did not match]"));
 
 	}
 	my $argument = $1;

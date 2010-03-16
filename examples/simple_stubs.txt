@@ -1,0 +1,4 @@
+hello_world	
+hola_mundo	''
+salut_monde	5
+*	undef

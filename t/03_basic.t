@@ -10,7 +10,7 @@ use Package::Transporter sub{eval shift}, sub {
 		$i += 7;
 		return(qq{sprintf('$i%s', '$_[1]')});
 	}];
-	bless($generator, 'Package::Transporter::Generator');
+	bless($generator, 'Package::Transporter::Generator::Anonymous');
 
 	my $rule = Package::Transporter::Rule::Standard->new($generator,
 		['Basic_Test', 'main'], ['tfrv1', 'tfrv3']);

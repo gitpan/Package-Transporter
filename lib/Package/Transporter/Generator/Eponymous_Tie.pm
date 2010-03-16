@@ -71,7 +71,7 @@ sub implement {
 
 	my $sub_bodies = $self->[ATB_SUB_BODIES];
 	unless (exists($sub_bodies->{$sub_name})) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, "::Eponymous_Tie [not in '$self->[ATB_DB_FILE]']"));
+		return($self->failure(undef, $sub_name, "::Eponymous_Tie [not in '$self->[ATB_DB_FILE]']"));
 	}
 	my $prototype = '';
 	if (exists($sub_bodies->{"$sub_name-prototype"})) {

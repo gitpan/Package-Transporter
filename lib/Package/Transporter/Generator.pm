@@ -13,11 +13,6 @@ sub new {
 	return($self);
 }
 
-sub implement {
-	my $self = shift;
-	return($self->[0]->(@_));
-}
-
 my $autoload_template = q{
 	sub %s { %s };
 	return(\&%s);
@@ -64,7 +59,7 @@ sub new_class {
 }
 
 sub failure($$;@) {
-	my ($pkg_name, $sub_name, $what) = @_;
+	my ($self, $pkg_name, $sub_name, $what) = @_;
 	my @where = caller;
 	my $failure = sub {
 		my @caller = caller();

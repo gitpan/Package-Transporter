@@ -1,0 +1,43 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Simple_Stubs - simple subroutines stubs
+
+=head1 SYNOPSIS
+
+	use Package::Transporter sub{eval shift}, sub {
+		my $generator = $_[0]->create_generator('::Simple_Stubs',
+			'simple_stubs.txt');
+		$_[0]->register_potential($generator, 'FOR_SELF');
+	};
+	
+	sub yn($) { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
+	
+	yn(potentially_defined('hello_worlds'));
+	yn(potentially_defined('hello_world'));
+	yn(!defined(&hello_world));
+	
+	hello_world();
+	
+	yn(defined(&hello_world));
+	exit(0);
+
+=head1 DESCRIPTION
+
+Creates simple subroutines with a return statement. Content of the return is defined in an external file.
+
+=head2 Format of Stub Definitions
+
+Tab separated values. Name of subroutine, tab, return value.
+
+	hello_world	$_[0]
+	hola_mundo	''
+	salut_monde	5
+	*	undef
+	
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

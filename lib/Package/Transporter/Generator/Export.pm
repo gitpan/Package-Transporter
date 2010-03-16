@@ -38,7 +38,7 @@ sub implement {
 		$defining_pkg = $pkg_name
 	}
 	if ($ONLY_DEFINED_ORIGINALS and !defined($defining_pkg)) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, '::Export [original does not exist]'));
+		return($self->failure(undef, $sub_name, '::Export [original does not exist]'));
 	}
 
 	my $sub_text = sprintf(q{

@@ -41,11 +41,11 @@ sub implement {
 	my ($self, $pkg, $sub_name) = (shift, shift, shift);
 
 	unless($sub_name eq 'require_customized') {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, ' [the name require_customized is hardcoded]'));
+		return($self->failure(undef, $sub_name, ' [the name require_customized is hardcoded]'));
 	}
 	my $file_name = search_inc_for($_[0]);
 	unless(defined($file_name)) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, q{ [file '$file_name' not found]}));
+		return($self->failure(undef, $sub_name, q{ [file '$file_name' not found]}));
 	}
 
 	read_file($file_name, my $code);

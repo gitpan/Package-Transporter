@@ -14,7 +14,7 @@ sub implement {
 	my ($self, $pkg, $sub_name) = (shift, shift, shift);
 
 	unless($sub_name =~ m,^$prefix(\w+)$,) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, "::Shell ['$sub_name' not matching '$prefix(\\w+)']"));
+		return($self->failure(undef, $sub_name, "::Shell ['$sub_name' not matching '$prefix(\\w+)']"));
 
 	}
 	my $cmd = $1;

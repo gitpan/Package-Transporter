@@ -60,10 +60,10 @@ sub implement {
 
 	my $rows = $self->[ATB_DBH]->selectall_arrayref($select, {}, $sub_name, $pkg->name, scalar(@_));
 	unless (defined($rows)) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, '::SQL_Table [error in SQL statement?]'));
+		return($self->failure(undef, $sub_name, '::SQL_Table [error in SQL statement?]'));
 	}
 	unless (scalar($rows)) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, '::SQL_Table [no record found]'));
+		return($self->failure(undef, $sub_name, '::SQL_Table [no record found]'));
 	}
 	my $row = shift(@$rows);
 

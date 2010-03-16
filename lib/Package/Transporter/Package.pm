@@ -10,14 +10,21 @@ sub ATB_PKG_NAME() { 0 };
 sub ATB_VISIT_POINT() { 1 };
 sub ATB_SEARCH_PATH() { 2 };
 sub ATB_PATH_PARTITION() { 3 };
+sub ATB_EXISTING() { 4 };
+sub ATB_MY_AUTOLOAD() { 5 };
 
 use Package::Transporter::Rule::Standard;
 use Package::Transporter::Pre_Selection;
 use Package::Transporter::Path_Partition;
 use Package::Transporter::Generator;
-#use Package::Transporter::Instant;
+use Package::Transporter::Generator::Anonymous;
+
 my $RULES = Package::Transporter::Pre_Selection->new(); 
 
+our $OVERWRITE //= 0;
+our $DEBUG //= 0;
+
+my $generator_class = 'Package::Transporter::Generator';
 my $autoloadcan = q{
 	my $object = shift(@_);
 
@@ -26,6 +33,7 @@ my $autoloadcan = q{
 		my $sub_ref = $object->autoload($AUTOLOAD, @_);
 		goto &$sub_ref if (defined($sub_ref));
 	}
+#	Internals::SvREADONLY(&AUTOLOAD, 1);
 	sub can {
 		return(UNIVERSAL::can(@_) // $object->can_already(@_));
 	}
@@ -57,10 +65,22 @@ sub new {
 		Package::Transporter::Path_Partition->new($pkg_name)
 	];
 	bless($self, $class);
-	Internals::SvREADONLY(@{$self}, 1);
 
+	my $existing = "$pkg_name\::AUTOLOAD";
+	if(defined(&$existing)) {
+		if($OVERWRITE) {
+			push(@$self, \&$existing);
+		} else {
+			Carp::confess("The subroutine '$existing' already exists.");
+		}
+	}
 	$visit_point->($autoloadcan, $self);
+	if($DEBUG) {
+		$self->[ATB_MY_AUTOLOAD] = \&$existing;
+	}
+	
 
+	Internals::SvREADONLY(@{$self}, 1);
 	return($self);
 }
 
@@ -85,7 +105,9 @@ sub transport {
 	my $sa = $@;
 	my $rv = $self->[ATB_VISIT_POINT]->($$code_ref, @_);
 	if ($@) {
-		my $msg = "Offending Code:\n$$code_ref\n".$@;
+		my $msg = '';
+		$msg .= "Offending Code:\n$$code_ref\n" unless($^S);
+		$msg .= $@;
 		Carp::confess($msg);
 	}
 	$@ = $sa;
@@ -107,7 +129,7 @@ sub($$;@) {
 		local $@;
 		$rule = eval $code;
 		Carp::confess($@) if ($@);
-		$generator = Package::Transporter::Generator->new($rule);
+		$generator = Package::Transporter::Generator::Anonymous->new($rule);
 	}
 	return($generator);
 }
@@ -132,7 +154,7 @@ sub register_potential {
 	if ($potential_ref eq '') {
 		$generator = $self->create_generator($potential);
 	} elsif ($potential_ref eq 'CODE') {
-		$generator = Package::Transporter::Generator->new($potential);
+		$generator = Package::Transporter::Generator::Anonymous->new($potential);
 	} else {
 		$generator = $potential;
 	}
@@ -177,7 +199,7 @@ sub register_drain {
 	if ($drain_ref eq '') {
 		$generator = $self->create_generator("::Constant_Function$drain");
 	} elsif ($drain_ref eq 'CODE') {
-		$generator = Package::Transporter::Generator->new($drain);
+		$generator = Package::Transporter::Generator::Anonymous->new($drain);
 	} else {
 		$generator = $drain;
 	}
@@ -233,8 +255,8 @@ sub implement_potential {
 
         my $generator = $self->find_generator($sub_name);
         unless (defined($generator)) {
-                return(Package::Autoloader::Generator::failure(undef, $sub_name,
- 'package object: no rule found'));
+                return($generator_class->failure(undef, $sub_name,
+			'package object: no rule found'));
         }
 
         return($generator->run($self, $self->[ATB_PKG_NAME], $sub_name));
@@ -257,19 +279,21 @@ sub autoload {
 	}
 
 	my $generator;
-	if (Scalar::Util::blessed($_[0])) {
+	if (Scalar::Util::blessed($_[0])
+	or (defined($_[0]) and ($_[0] eq $pkg_name))) { # constructor?
 		my $ISA = mro::get_linear_isa($pkg_name);
 		($self, $generator) = Package::Transporter::find_generator($ISA, $sub_name, @_);
-		unless (defined($generator)) {
-			return(Package::Transporter::Generator::failure(undef, $sub_name, 'package object: no rule found'));
-		}
 	} else {
 		$generator = $self->find_generator($sub_name, @_);
-		unless (defined($generator)) {
-			return(Package::Transporter::Generator::failure(undef, $sub_name, 'package object: no rule found'));
-		}
 	}
 
+	unless (defined($generator)) {
+		if($OVERWRITE and (scalar(@$self) == 5)) {
+			$self->[ATB_EXISTING]->(@_);
+		}
+		return($generator_class->failure(undef, $sub_name,
+			'package object: no rule found'));
+	}
 	return($generator->run($self, $pkg_name, $sub_name, @_));
 }
 
@@ -302,9 +326,18 @@ sub potentially_defined {
 	return(defined(shift->find_generator(@_)));
 }
 
-#sub DESTROY {
-#	use Data::Dumper;
-#	print STDERR Dumper($_[0]);
-#}
+if($DEBUG) {
+	eval q{
+sub DESTROY {
+	my $self = shift;
+	if(scalar(@$self) == 6) {
+		my $existing = $self->[ATB_PKG_NAME]."::AUTOLOAD";
+		if($self->[ATB_MY_AUTOLOAD] ne \&$existing) {
+			Carp::confess("Something modified the AUTOLOAD I installed.");
+		}
+	}
+}
+	};
+}
 
 1;

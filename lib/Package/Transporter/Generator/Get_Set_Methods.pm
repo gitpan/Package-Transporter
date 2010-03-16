@@ -14,7 +14,7 @@ sub implement {
 	my $NAME = uc($name);
 	my $key = $pkg->name. '::ATB_' . $NAME;
 	unless(defined(&$key)) {
-		return(Package::Transporter::Generator::failure(undef, $sub_name, "::Get_Set_Methods [missing constant function ATB_$NAME]"));
+		return($self->failure(undef, $sub_name, "::Get_Set_Methods [missing constant function ATB_$NAME]"));
 	}
 
 	my $type = Scalar::Util::reftype($_[0]);
@@ -27,7 +27,7 @@ sub implement {
 #		$attribute = '${$_[0]}';
 #	} elsif($type eq 'CODE') { # hidden attributes...
 	} else {			
-		return(Package::Transporter::Generator::failure(undef, $sub_name, "::Get_Set_Methods [don't know how to handle object type '$type']"));
+		return($self->failure(undef, $sub_name, "::Get_Set_Methods [don't know how to handle object type '$type']"));
 	}
 	my $code;
 	if($what eq 'g') {
@@ -37,7 +37,7 @@ sub implement {
 		$code = sprintf(q{sub %s { $_[0]%s = $_[1]; return; }; },
 			$sub_name, $attribute);
 	} else {			
-		return(Package::Transporter::Generator::failure(undef, $sub_name, "::Get_Set_Methods [name must start with get_ or set_]"));
+		return($self->failure(undef, $sub_name, "::Get_Set_Methods [name must start with get_ or set_]"));
 
 	}
 	$code .= sprintf(q{return(\&%s);}, $sub_name);

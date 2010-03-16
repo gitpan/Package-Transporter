@@ -63,9 +63,9 @@ Automated drain is mostly practical to generate constant functions and to distri
 
 =head2 Motivation
 
-A couple of years ago I made array-based objects the default for my Perl5 code and started to use constant functions instead of strings. It was a little bit scary to notice that in effect my code would work out of the box surprisingly often. Meaning after I fixed any mistakes refused by the compiler. Remaining systematic sources of errors were the manual definition of constant functions and the manual maintenance of @EXPORT. Both are addressed through automation in this module.
+A couple of years ago I made array-based objects the default for my Perl5 code and started to use constant functions instead of strings. It was a little bit scary to notice that in effect my code would work out of the box surprisingly often. Meaning after I fixed any mistakes reported by the compiler. Remaining sources of systematic errors were the manual definition of constant functions and the manual maintenance of @EXPORT. Both are addressed through automation with the help of this module.
 
-Another limitation I encountered is the monolithic approach of the import and AUTOLOAD subroutines. If one module uses them, another can't easily be used in addition. This module addresses the problem by replacing import with visit points and by adding a dispatch to AUTOLOAD.
+Another limitation is the incompatibility of modules exporting AUTOLOAD, which are indicated by a warning like 'Subroutine AUTOLOAD redefined at ...'. The effect is fatal, although the warning isn't. This module addresses the problem by replacing import with visit points and by adding a dispatch to AUTOLOAD.
 
 
 =head1 Drain
@@ -198,7 +198,7 @@ This is an early public release. Also see the Todo file. The documentation can't
 
 AUTOLOAD is only triggered by Perl5, if something looks like a subroutine call. Paranthesis help a lot with that decision. Counter-example: my $result = calc_5 7, 8 expects calc_5 to exists at least as a (manually declared) prototype. But calc_5(7, 8) is fine for AUTOLOAD.
 
-The statement 'use Package::Transporter' is executed during compile time. Some things are not available then. Like the DATA file handle or lexical variables. Get the package object at run time with Package::Transporter->new, see sql_table.pl and DATA_section.pl.
+The statement 'use Package::Transporter' is executed during compile time. Some things are not available then. Like the DATA file handle or lexical variables. Get the package object again at run time with Package::Transporter->new, see sql_table.pl and DATA_section.pl.
 
 Matching subroutine names with '' means that you promise to generate anything. It's most likely not what you want, because if you find out you can't, then there is no way out other than indicating failure. Example:
 
@@ -223,6 +223,10 @@ Perl can't verify the arguments for the call to B(2, 8), because B is not define
 =head2 Constant Functions
 
 Constant Functions are inlined at compile time, when AUTOLOAD isn't considered, yet. Therefore you can't define constant functions via AUTOLOAD at the moment (Perl 5.10/5.11).
+
+=head2 Subroutine vs. Method Call
+
+Generators for subroutines are searched along the package name by shortening it at the :: separators successively from right to left. For method calls this search is done in each parent class (there might by many - Perl has multiple inheritance). But what is an ordinary subroutine call and what is a method call? AUTOLOAD doesn't tell how the call is meant. The decision is done with defined(blessed($_[0])). In addition, if $_[0] is the current package name, the request is also considered a method call (constructor). Both criteria provide a good guess only, but are the best compromise currently available.
 
 =head2 CORE::defined and UNIVERSAL::can
 
