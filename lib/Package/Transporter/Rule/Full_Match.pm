@@ -1,4 +1,4 @@
-package Package::Transporter::Rule;
+package Package::Transporter::Rule::Full_Match;
 use strict;
 use warnings;
 

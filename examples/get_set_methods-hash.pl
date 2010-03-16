@@ -2,7 +2,8 @@
 use strict;
 
 use Package::Transporter sub{eval shift}, sub {
-	$_[0]->register_potential('::Set_Accessors_Demo', 'FOR_ANY', 'set_');
+	$_[0]->register_drain('::Random', 'FOR_SELF', 'ATB_', qw(WORLD));
+	$_[0]->register_potential('::Get_Set_Methods', 'FOR_ANY');
 };
 
 my $obj = bless( {}, 'main');

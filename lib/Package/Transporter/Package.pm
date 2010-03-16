@@ -29,6 +29,7 @@ my $autoloadcan = q{
 	sub can {
 		return(UNIVERSAL::can(@_) // $object->can_already(@_));
 	}
+	*__ = \&Package::Transporter::__;
 };
 
 my $potentially_can = q{

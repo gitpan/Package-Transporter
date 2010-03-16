@@ -47,7 +47,8 @@ An package name from where to take the subroutines from can be specified as foll
 	
 	package Synopsis;
 	use Package::Transporter sub{eval shift}, sub {
-		my $generator = $_[0]->create_generator('::Export', 'POSIX');
+		my $generator = $_[0]->create_generator('::Export', 
+			'POSIX', 'Data::Dumper');
 		$_[0]->register_potential($generator, 'FOR_SELF');
 	};
 	

@@ -14,9 +14,9 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 2c88f8b87d3c548db62101ffcf218f7344e82992 Changes
+SHA1 62b744a965c42ba7a36f7c1840cf19b198924733 Changes
 SHA1 cb34e4112b3d7e5cf1ab0978b38353c879683dad INSTALL
-SHA1 4a68324931005d3e6d44dbabe66311b508523698 MANIFEST
+SHA1 01e41708fd4e68d94660c40e0f20a821652e29de MANIFEST
 SHA1 0c33d2cae032f5d27aa005f2d67b06ebde82b949 Makefile.PL
 SHA1 1b805b6d1fed0270fc9b9f1dacc854388864aa63 README
 SHA1 9f7c413b1303800886fe3a8a8295caa032222a94 Todo
@@ -27,7 +27,7 @@ SHA1 76caa7e63ba82f8bbc1dad6ad402a2d77d7cd031 examples/CF/CF2.pl
 SHA1 b40fc528ae5516bf51e35dba1e52a3cbfd016e45 examples/CF/CF3.pl
 SHA1 abc9f0ded5a18bcbc45679ecb60261e018a1f97a examples/CF/CF4.pl
 SHA1 8bbdc8ca4acc28629fd34ac46fa469538b3f86b7 examples/DATA_section.pl
-SHA1 b28e0143687316a007d97d7e3ae3116974fc5a30 examples/closures_demo.pl
+SHA1 b01ca0a1667f601bae7874b5c22c3fcc8dbc5b03 examples/argument_in_name.pl
 SHA1 62acb784105a3a4aa3536ffec5785595dac77c57 examples/enumerated_cf.pl
 SHA1 6f1f16489813847defea057e4a2bee6f34750625 examples/eponymous_directory.pl
 SHA1 736153b7b1e3a7f755509f3dac4e9d1dc446b53b examples/eponymous_directory/-prototypes.pl
@@ -35,25 +35,26 @@ SHA1 d843c84315aee4ff18d4000e47ae663464fbce8c examples/eponymous_directory/hello
 SHA1 ee1d0a2b36c61b9813f45b573a3b8b18789bb628 examples/eponymous_directory/yn.pl
 SHA1 7896432e5ee3f9b935eec95205f04ecf0a11bdbf examples/eponymous_tie.pl
 SHA1 3cd053e411c6eeaa3eebff1883f48a6457971453 examples/export.pl
-SHA1 b6f545bb39596c776737895a2c9e443bc824ead4 examples/export_proxy.pl
+SHA1 d5f5d7b1281ed8d9bc4753542a0bc934d8665de2 examples/export_proxy.pl
 SHA1 40ad4270ae8351d92b77bc1d3bb1f7ef960275ff examples/flatened_cf.pl
+SHA1 ec8d9eb7022a52a1bda223d277722396e1f06710 examples/get_set_methods-array.pl
+SHA1 f0b776cd4868a6751a969ab699e405421340f4bc examples/get_set_methods-hash.pl
 SHA1 4bd2d3d1c82a768f9b4a1861b1c84a3d9b78ebc5 examples/hello_world.pl
 SHA1 8ffd33365a57ff46091c82016b5b6813f7009b1f examples/lowered_cf.pl
 SHA1 89e39eb3f7521f6f09c976d4f4f5e37387688b02 examples/main.dbm
 SHA1 fb792b5418f63c827cc6aeb13edbbb69a7b480fc examples/random_cf.pl
 SHA1 bdd780663d58a5e52df31a4eb876b8ae52d33a7f examples/require_customized.pl
 SHA1 107114c1116f032db7ae5349673305f99fac335f examples/search_path.pl
-SHA1 ca3b2bcdf6ce6f9605362f2b8ba56ed876b69e09 examples/set_accessors-packaged.pl
-SHA1 2d0bb214e1ff40d40da7459197db03d4d79874a1 examples/set_accessors-standalone.pl
+SHA1 fee6a71fb0b874d90e70f75e4599de9d92b73506 examples/shell.pl
 SHA1 907d3ccaad2396cd5a105dd08ea2f02e1901d377 examples/sql_table.pl
 SHA1 be578ddbd4553ebb88036d7f2c6675698ff66402 examples/suggested_use.pl
 SHA1 3ddcfb0e74f83cd4e6e7d43e5b3151d736cd5162 examples/synopsis.pl
-SHA1 f981aae0e8712dbb7ad68b08fdd8f754e3316f28 lib/Package/Transporter.pm
+SHA1 cf600d8aa3b23e5f4d7110a4eadd2787888fbf2c lib/Package/Transporter.pm
 SHA1 453e665c6a543e09d57dbdd80ca5ba1ab90b89e1 lib/Package/Transporter.pod
-SHA1 ddc3646e3202b539d3b7b6412cf5fb4d56ea98bb lib/Package/Transporter/Generator.pm
+SHA1 76c4dec349af496d1f0a848645a8437f399daa7d lib/Package/Transporter/Generator.pm
 SHA1 9bea5382fd33a13921eb0b900bdc73a74827069e lib/Package/Transporter/Generator.pod
-SHA1 32171edb82ea3ef6a6f3a2d489bba6e6ba1f2998 lib/Package/Transporter/Generator/Closures_Demo.pm
-SHA1 b3bb6d03e1228ee89e78e2369f4caf63bb58d0c7 lib/Package/Transporter/Generator/Closures_Demo.pod
+SHA1 429b3c421106412e344029f9738d49b67a3c728f lib/Package/Transporter/Generator/Argument_in_Name.pm
+SHA1 7d3b197b26570e0c9b251d42319b366e2b3cab4f lib/Package/Transporter/Generator/Argument_in_Name.pod
 SHA1 4737ee1bb8a711e9e0696138f2b452b686168f26 lib/Package/Transporter/Generator/Constant_Function.pm
 SHA1 bb10f9fd386cfa1b625d10464cc19280216843e5 lib/Package/Transporter/Generator/Constant_Function.pod
 SHA1 b24686218b967f4e15007f847f11c3f7c1852b74 lib/Package/Transporter/Generator/Constant_Function/Enumerated.pm
@@ -68,26 +69,28 @@ SHA1 cafa52265e6e0a5bf17d32b4e566a31a9d65832d lib/Package/Transporter/Generator/
 SHA1 6d77990ca19f2750889f330821c482921d1f8b5f lib/Package/Transporter/Generator/Eponymous_Directory.pod
 SHA1 2ea8b7595a974fe14deb80e18fc88e601afd42d4 lib/Package/Transporter/Generator/Eponymous_Tie.pm
 SHA1 5227d3425cd038a6dbedc49c049e72a98e50d9cd lib/Package/Transporter/Generator/Eponymous_Tie.pod
-SHA1 417648c4af5cfd86c1fbcb6890d5c54610c6195c lib/Package/Transporter/Generator/Export.pm
-SHA1 047c0677c77e6969c80951e8deff57faaed1f6ec lib/Package/Transporter/Generator/Export.pod
+SHA1 3da7f4452a655ed23d602f0cb901e32a1b5ad35e lib/Package/Transporter/Generator/Export.pm
+SHA1 d7d93a7411f84fb467cfd04914101baa9bc56812 lib/Package/Transporter/Generator/Export.pod
+SHA1 27e85b73b09ca909809c13249c4864f1e1dc5138 lib/Package/Transporter/Generator/Get_Set_Methods.pm
+SHA1 f92cabe60fdbd472f43a8034dc48197038720cdd lib/Package/Transporter/Generator/Get_Set_Methods.pod
 SHA1 f068c8f5464ff12a472f9006d51bfc5d57d85cdf lib/Package/Transporter/Generator/Hello_Anything.pm
 SHA1 a93ee4c5f94bca776f424dfec09222b98418dac9 lib/Package/Transporter/Generator/Hello_Anything.pod
 SHA1 46b40cb54645c63ea7dc68b657b45ebb7948ef09 lib/Package/Transporter/Generator/Require_Customized.pm
 SHA1 561e7426d68187b072e2fb49480653cd5faee7fd lib/Package/Transporter/Generator/Require_Customized.pod
 SHA1 1fce9137ab2b97ae0487d1dee2f56ae446e64d87 lib/Package/Transporter/Generator/SQL_Table.pm
 SHA1 4da36425ade1d0bce66602d584fb49867ec3e80f lib/Package/Transporter/Generator/SQL_Table.pod
-SHA1 299f44f3a93648d0ac1c4a5f83faf80b7ed0992b lib/Package/Transporter/Generator/Set_Accessors_Demo.pm
-SHA1 f829ad9ec653c1faf8f13b80c916998ee3986f87 lib/Package/Transporter/Generator/Set_Accessors_Demo.pod
+SHA1 6909b62951411c99f5cd872c91f44770e3e1d734 lib/Package/Transporter/Generator/Shell.pm
+SHA1 5b457aa33cd1d8e8da2b11370f669a35f255c4d9 lib/Package/Transporter/Generator/Shell.pod
 SHA1 c8f8556ddd3950329160927c6bd969a5f4d05c73 lib/Package/Transporter/Generator/Suggested_Use.pm
 SHA1 f8d3470d2857e36bb202c46a8d8b85e44956e204 lib/Package/Transporter/Generator/Suggested_Use.pod
 SHA1 ddcadec15a96a5bb51490afda17644bd411d54fe lib/Package/Transporter/Generator/Suggested_Use/Suggestions.pm
-SHA1 741d945ad9f378373f69477f88af5207c5ef7f71 lib/Package/Transporter/Package.pm
+SHA1 98b5f206940232b54731bc4b275053c92516da65 lib/Package/Transporter/Package.pm
 SHA1 390675472a492575bd2a454b674bde416258b518 lib/Package/Transporter/Package.pod
 SHA1 4c4cbf76bc3341023bc089f2c9fe621b9800ad83 lib/Package/Transporter/Path_Partition.pm
 SHA1 baf9d74e7426c61127557bfb13d4e9046884380b lib/Package/Transporter/Path_Partition.pod
 SHA1 e509feeb0c74eeae3e33055c442f58d609480dd5 lib/Package/Transporter/Pre_Selection.pm
 SHA1 129d75efa19b68347ffdb86560cc8b009107d476 lib/Package/Transporter/Pre_Selection.pod
-SHA1 62764fd44152c821978bbd9cc0467cf67c052802 lib/Package/Transporter/Rule/Full_Match.pm
+SHA1 a7bbedee5bd3407f39b9bd4393d7aad0675c2375 lib/Package/Transporter/Rule/Full_Match.pm
 SHA1 c152f307239bfc287758d789b461c47e35830b60 lib/Package/Transporter/Rule/Full_Match.pod
 SHA1 bfd5ef7d0377a05ffb47d4279711eab11880ca04 lib/Package/Transporter/Rule/Gone.pm
 SHA1 9bf3b00ae64441ea3ae7adc996d4615cf622d486 lib/Package/Transporter/Rule/Gone.pod
@@ -102,7 +105,7 @@ SHA1 9f8b513b3a96e612a8c7ed840d6b1d43f837a744 t/06_constant_function.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.9 (GNU/Linux)
 
-iEYEARECAAYFAkudiesACgkQdnhEwsG7x7rv2wCgskh9F7RswKKq9oO25wfR1cBs
-b6MAoJ3r1gqJcz5htTF5cxSSfJrPNT2l
-=pVh/
+iEYEARECAAYFAkue5IwACgkQdnhEwsG7x7qeJgCfQxBOux+KQIkH8KzWANaR9hVY
+vWoAoI7yBlNehVs08fiJ1HuYfI38CgXH
+=mH+j
 -----END PGP SIGNATURE-----

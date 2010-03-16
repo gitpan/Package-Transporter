@@ -18,7 +18,7 @@ sub implement {
 	return($self->[0]->(@_));
 }
 
-my $std_sub = q{
+my $autoload_template = q{
 	sub %s { %s };
 	return(\&%s);
 };
@@ -29,7 +29,8 @@ sub run {
 	return unless (defined($code));
 	if (ref($code) eq '') {
 		unless ($code =~ m,^[\n\t\s]*sub[\n\t\s],) {
-			$code = sprintf($std_sub, $sub_name, $code, $sub_name);
+			$code = sprintf($autoload_template,
+				$sub_name, $code, $sub_name);
 		}
 		$code = $pkg->transport(\$code);
 	}
@@ -81,6 +82,17 @@ sub failure($$;@) {
 		die($msg);
 	};
 	return($failure);
+}
+
+sub require_many {
+	my $self = shift;
+	foreach my $pkg_name (@_) {
+		my $class_file = $pkg_name;
+		$class_file =~ s,::,/,sg;
+		$class_file .= '.pm';
+		require $class_file;
+	}
+	return;
 }
 
 1;

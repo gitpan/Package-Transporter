@@ -2,7 +2,7 @@
 use strict;
 
 use Package::Transporter sub{eval shift}, sub {
-	$_[0]->register_potential('::Closures_Demo', 'FOR_ANY', 'calc_(\d+)');
+	$_[0]->register_potential('::Argument_in_Name', 'FOR_ANY', 'calc_');
 };
 
 sub calc {

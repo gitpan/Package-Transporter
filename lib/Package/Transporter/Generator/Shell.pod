@@ -1,0 +1,35 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Shell - bridge to Shell.pm
+
+=head1 SYNOPSIS
+
+	delete($ENV{'ENV'});
+	$ENV{'PATH'} = '/usr/local/bin:/usr/bin:/bin';
+	
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->register_potential('::Shell', 'FOR_SELF');
+	};
+	
+	sub yn($) { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
+	
+	yn(!defined(&shell_ls));
+	yn(potentially_defined('shell_ls'));
+	
+	print STDOUT shell_ls('-l');
+	
+	yn(defined(&shell_ls));
+	exit(0);
+
+=head1 DESCRIPTION
+
+Executes the part of the dynamic subroutine name after shell_ as a shell command. The work is done by Shell.pm, but not via its AUTOLOAD.
+
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut
