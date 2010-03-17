@@ -11,11 +11,13 @@ sub matcher {
 	return(sub { 1; });
 }
 
+my $separator = "#----------------------------------------------------------------------------\n";
 sub implement {
 	my ($self, $pkg, $sub_name) = (shift, shift, shift);
 
 	my $pkg_name = $pkg->name;
-	print STDERR "#----------------------------------------------------------------------------\n";
+	print STDERR $separator;
+	print STDERR "# ".scalar(localtime(time)), "\n";
 	print STDERR "# The subroutine '$sub_name' is missing in package '$pkg_name'.\n";
 	print STDERR "# You can write it now if you're adventurous.\n";
 	while(1) {
@@ -78,7 +80,7 @@ EOH
 		} else {
 			print STDERR "'$what' is not one of the expected numbers. Try again.\n";
 		}
-		print STDERR "#----------------------------------------------------------------------------\n";
+		print STDERR $separator;
 	}
 }
 

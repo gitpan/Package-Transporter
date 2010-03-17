@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Constant_Function - base class for generating constant functions at compile time
+Package::Transporter::Generator::Constant_Function - base class for generating constant functions
 
 
 =head1 SYNOPSIS

@@ -37,6 +37,17 @@ sub _init {
 	my ($self, $defining_pkg) = (shift, shift);
 
 	$self->[ATB_BASE_DIR] = eponymous_base_dir($defining_pkg->name);
+	if($^C == 1) {
+		opendir(D, $self->[ATB_BASE_DIR])
+		|| Carp::confess("opendir: $!");
+		my @names = readdir(D);
+		closedir(D);
+
+		my @file_names = map("$self->[ATB_BASE_DIR]/$_",
+			grep($_ =~ m/\.pl$/, @names));
+		my $code = 'foreach my $pkg (@{$_[0]}) { require $pkg; };';
+		return($defining_pkg->transport(\$code, \@file_names));
+	}
 	return;
 }
 

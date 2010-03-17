@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Interactive - write missing subroutines as the running program encounters them
+Package::Transporter::Generator::Interactive - AUTOLOAD interactive (write missing subroutines as the running program encounters them)
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ Problem: at the end of a long computation, the program crashed due to a missing 
 
 Starts a simple interactive shell as shown below. Requires an interactive TTY. A fair attempt is made not to suffer from interactive syntax errors.
 
-Chances are that you can recover from an otherwise fatal situation, but any kind of recovery has to be practiced.
+Chances are that you can recover from an otherwise fatal situation, but keep in mind that any kind of recovery has to be practiced.
 
 =head2 Sample Screen Output
 

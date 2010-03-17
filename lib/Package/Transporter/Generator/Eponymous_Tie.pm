@@ -37,6 +37,13 @@ sub _init {
 
 	$self->[ATB_DB_FILE] = $file_name;
 	$self->[ATB_SUB_BODIES] = \%sub_bodies;
+	if($^C == 1) {
+		my @keys = grep($_ !~ m/^(\w+)-prototype$/,
+			keys(%{$self->[ATB_SUB_BODIES]}));
+		my $code = $self->assemble(@keys);
+		$self->[ATB_PKG]->transport(\$code);
+	}
+
 	return;
 }
 
@@ -45,7 +52,7 @@ sub prototypes {
 
 	my $code = '';
 	foreach my $key (keys(%{$self->[ATB_SUB_BODIES]})) {
-		next unless ($key =~ m,^(\w+)-prototype,);
+		next unless ($key =~ m,^(\w+)-prototype$,);
 		$code .= sprintf('sub %s(%s); ',
 			$1, $self->[ATB_SUB_BODIES]->{$key});
 	}
@@ -60,30 +67,40 @@ sub matcher {
 	});
 }
 
+sub implement {
+	my ($self, $pkg, $sub_name) = (shift, shift, shift);
+
+	unless (exists($self->[ATB_SUB_BODIES]->{$sub_name})) {
+		return($self->failure(undef, $sub_name, "::Eponymous_Tie [not in '$self->[ATB_DB_FILE]']"));
+	}
+	my $code = $self->assemble($sub_name);
+	return($pkg->transport(\$code));
+}
+
 my $std_sub = q{
 	sub %s%s {
 %s
 	};
 	return(\&%s);
 };
-sub implement {
-	my ($self, $pkg, $sub_name) = (shift, shift, shift);
+sub assemble {
+	my ($self) = (shift);
 
+	my $code = '';
 	my $sub_bodies = $self->[ATB_SUB_BODIES];
-	unless (exists($sub_bodies->{$sub_name})) {
-		return($self->failure(undef, $sub_name, "::Eponymous_Tie [not in '$self->[ATB_DB_FILE]']"));
-	}
-	my $prototype = '';
-	if (exists($sub_bodies->{"$sub_name-prototype"})) {
-		$prototype = '('.$sub_bodies->{"$sub_name-prototype"}.')';
-	}
+	foreach my $sub_name (@_) {
+		my $prototype = '';
+		if (exists($sub_bodies->{"$sub_name-prototype"})) {
+			$prototype = '('.$sub_bodies->{"$sub_name-prototype"}.')';
+		}
 
-	my $code = sprintf($std_sub, 
-		$sub_name,
-		$prototype,
-		$sub_bodies->{$sub_name},
-		$sub_name);
-	return($pkg->transport(\$code));
+		$code .= sprintf($std_sub, 
+			$sub_name,
+			$prototype,
+			$sub_bodies->{$sub_name},
+			$sub_name);
+	}
+	return($code);
 }
 
 1;

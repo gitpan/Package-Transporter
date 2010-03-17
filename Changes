@@ -1,3 +1,8 @@
+0.84	17 March 2010
+	- added ::Eponymous_Packages
+	- made other ::Eponymous modules more robust (check for -c)
+	- complemented ::Interactive
+
 0.83	17 March 2010
 	- $DEBUG and $OVERWRITE
 	- failure is not a Generator method

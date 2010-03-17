@@ -23,6 +23,10 @@ sub run {
 	my $code = $self->implement($pkg, $sub_name, @_);
 	return unless (defined($code));
 	if (ref($code) eq '') {
+		my $existing = "$pkg_name\::$sub_name";
+		if(defined(&$existing)) {
+			Carp::confess("Internal error: about to re-define subroutine '$existing'.\n(Possible causes: no return or return(&..) instead return(\\&..).)");
+		}
 		unless ($code =~ m,^[\n\t\s]*sub[\n\t\s],) {
 			$code = sprintf($autoload_template,
 				$sub_name, $code, $sub_name);

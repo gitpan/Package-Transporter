@@ -34,6 +34,8 @@ Eponymous means the same name. This generator uses the subroutine name as a key 
 
 The generator extracts all keys from the DB-file and uses that for rule matches. Newly added keys will only be seen on the next start of the program.
 
+When running under -c ('syntax check only'), the module will load all definitions from the eponymous db file. This reduces the chance of unpleasant surprises.
+
 =head2 Prototypes
 
 Prototype definitions are supported, but have to be explicitely requested. It only makes sense if defining and requesting package are the same (therefore the explicit request). Beside that, the correct prototype might not be known at compile time. However, for AUTOLOADed subroutines the prototype is not checked in Perl5, so for the moment prototypes are pretty much useless.

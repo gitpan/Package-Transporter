@@ -1,0 +1,24 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Anonymous - minimal generator with anonymous subroutines
+
+=head1 SYNOPSIS
+
+	use Package::Transporter sub{eval shift}, sub {
+	        my $yn = q{
+	                return(q{print STDOUT ($_[0] ? 'Yes' : 'No'), "\n";});
+	        };
+	        $_[0]->register_potential($yn, 'FOR_ANY', 'yn');
+	};
+
+=head1 DESCRIPTION
+
+The implementation is the given subroutine reference. 
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

@@ -10,7 +10,7 @@ use Package::Transporter;
 	my $pkg = Package::Transporter->new(sub{eval shift});
 	my $buffer = join('', <DATA>);
 	close(DATA);
-	my @matches = ($buffer =~ m,(?:^|\n)([\s\t]*sub[\s\t]*(\w+)[\s\t]*(\([^\)]*\))?[\s\t]*{[\s\t]*.*?\n[\s\t]*}[\s\t]*;?[\s\t]*\n+),sg);
+	my @matches = ($buffer =~ m,(?:^|\n)([\s\t]*sub[\s\t]+(\w+)[\s\t]+(\([^\)]*\))?[\s\t]*\{[\s\t]*.*?\n[\s\t]*\}[\s\t]*;?[\s\t]*\n+),sg);
 	my %subroutines = ();
 	while (scalar(@matches)) {
 		my ($body, $name, $prototype) = splice(@matches, -3);
@@ -29,9 +29,9 @@ use Package::Transporter;
 	$pkg->register_potential($generator, 'FOR_SELF', [keys(%subroutines)]);
 };
 
-yn(potentially_defined('hello_worlds'));
+yn(!potentially_defined('hello_worlds'));
 yn(potentially_defined('hello_world'));
-yn(defined(&hello_world));
+yn(!defined(&hello_world));
 
 hello_world();
 

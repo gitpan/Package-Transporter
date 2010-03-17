@@ -12,6 +12,8 @@ examples/eponymous_directory.pl
 examples/eponymous_directory/-prototypes.pl
 examples/eponymous_directory/hello_world.pl
 examples/eponymous_directory/yn.pl
+examples/eponymous_packages.pl
+examples/eponymous_packages/main.pm
 examples/eponymous_tie.pl
 examples/export.pl
 examples/export_proxy.pl
@@ -22,6 +24,7 @@ examples/hello_world.pl
 examples/interactive.pl
 examples/lowered_cf.pl
 examples/main.dbm
+examples/pipe.pl
 examples/random_cf.pl
 examples/require_customized.pl
 examples/search_path.pl
@@ -37,6 +40,7 @@ lib/Package/Transporter.pod
 lib/Package/Transporter/Generator.pm
 lib/Package/Transporter/Generator.pod
 lib/Package/Transporter/Generator/Anonymous.pm
+lib/Package/Transporter/Generator/Anonymous.pod
 lib/Package/Transporter/Generator/Argument_in_Name.pm
 lib/Package/Transporter/Generator/Argument_in_Name.pod
 lib/Package/Transporter/Generator/Constant_Function.pm
@@ -51,6 +55,8 @@ lib/Package/Transporter/Generator/Constant_Function/Random.pm
 lib/Package/Transporter/Generator/Constant_Function/Random.pod
 lib/Package/Transporter/Generator/Eponymous_Directory.pm
 lib/Package/Transporter/Generator/Eponymous_Directory.pod
+lib/Package/Transporter/Generator/Eponymous_Packages.pm
+lib/Package/Transporter/Generator/Eponymous_Packages.pod
 lib/Package/Transporter/Generator/Eponymous_Tie.pm
 lib/Package/Transporter/Generator/Eponymous_Tie.pod
 lib/Package/Transporter/Generator/Export.pm
@@ -61,6 +67,8 @@ lib/Package/Transporter/Generator/Hello_Anything.pm
 lib/Package/Transporter/Generator/Hello_Anything.pod
 lib/Package/Transporter/Generator/Interactive.pm
 lib/Package/Transporter/Generator/Interactive.pod
+lib/Package/Transporter/Generator/Pipe.pm
+lib/Package/Transporter/Generator/Pipe.pod
 lib/Package/Transporter/Generator/Require_Customized.pm
 lib/Package/Transporter/Generator/Require_Customized.pod
 lib/Package/Transporter/Generator/Shell.pm
