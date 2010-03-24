@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Pre_Selection - structure of internal rule tree
+Package::Transporter::Pre_Selection - Structure of internal rule tree
 
 =head1 DESCRIPTION
 

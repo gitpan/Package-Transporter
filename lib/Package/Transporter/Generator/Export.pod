@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Export - on-demand (proxy) export
+Package::Transporter::Generator::Export - On-demand (proxy) export
 
 =head1 SYNOPSIS
 

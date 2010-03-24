@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Get_Set_Methods - automatically created accessors and mutators
+Package::Transporter::Generator::Get_Set_Methods - Automatically created accessors and mutators
 
 =head1 SYNOPSIS
 

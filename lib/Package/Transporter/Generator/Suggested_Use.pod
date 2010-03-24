@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Suggested_Use - issue the right 'use MODULE' to get the missing subroutine
+Package::Transporter::Generator::Suggested_Use - Issue the right 'use MODULE' to get the missing subroutine
 
 =head1 SYNOPSIS
 

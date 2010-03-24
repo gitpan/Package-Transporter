@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::SQL_Table - store your subroutines in a database
+Package::Transporter::Generator::SQL_Table - Store your subroutines in a database
 
 =head1 SYNOPSIS
 

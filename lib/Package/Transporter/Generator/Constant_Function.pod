@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Constant_Function - base class for generating constant functions
+Package::Transporter::Generator::Constant_Function - Base class for generating constant functions
 
 
 =head1 SYNOPSIS
@@ -213,16 +213,6 @@ under the same terms as Perl itself.
 
 The manual page for L<Package::Transporter::Package> contains the details
 of using and extending Package::Transporter.
-
-Different approaches are provided by the Perl modules L<Exporter> and L<constant>.
-
-The following packages provide support for objects as array references and are therefore loosely related to Transporter: L<Class-Gomor> (there are more, but I can't find them right now).
-
-The following packages treat arrays as objects, which Transporter is not about, but that also clarifies things: 
-L<List::oo>, 
-L<Class-Builtin>, 
-L<Devel-Ladybug>, and
-L<Object-Array>.
 
 The package L<POE> is features a lot of constant functions
 

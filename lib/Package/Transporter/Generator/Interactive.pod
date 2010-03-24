@@ -48,6 +48,12 @@ Chances are that you can recover from an otherwise fatal situation, but keep in 
 	hello_world
 	Hello World.
 
+=head1 RELATED MODULES
+
+This module is different from REPL in that no error condition was triggered, yet.
+
+Carp::REPL, Devel::ebug, Devel::REPL
+
 =head1 ANYTHING ELSE
 
 Please see the documentation of the upstream package L<Package::Transporter>.

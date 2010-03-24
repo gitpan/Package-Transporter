@@ -71,14 +71,13 @@ sub lookup_rule {
 
 		foreach my $rule (@$sub_rules) {
 			my $generator = 
-				$rule->check($pkg_prefix, $sub_name, @_);
+				$rule->check($pkg_name, $sub_name, @_);
 			next unless (defined($generator));
 			return($generator);
 		}
 	}
 	return(undef);
 }
-
 
 sub collect_generators {
 	my ($self, $pkg_list, $pkg_family, $pkg_name) = @_;
@@ -125,7 +124,7 @@ sub collect_generators {
 sub release {
 	my ($self, $pkg_name) = @_;
 
-	delete($self->{"$pkg_name<<"});
+	CORE::delete($self->{"$pkg_name<<"});
 
 	if (exists($self->{"$pkg_name<>"})) {
 		my $renamed = delete($self->{"$pkg_name<>"});

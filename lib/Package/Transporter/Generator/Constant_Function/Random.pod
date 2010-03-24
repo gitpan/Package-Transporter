@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Constant_Function::Random - generate constant functions with random values
+Package::Transporter::Generator::Constant_Function::Random - Generate constant functions with random values
 
 =head1 SYNOPSIS
 

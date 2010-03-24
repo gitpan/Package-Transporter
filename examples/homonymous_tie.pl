@@ -1,16 +1,16 @@
 #!/usr/bin/perl -W -T
 use strict;
 use Carp qw();
-use Package::Transporter::Generator::Eponymous_Tie;
+use Package::Transporter::Generator::Homonymous_Tie;
 
-# eponymous means the same name as the package file base name,
+# homonymous means the same name as the package file base name,
 # which is 'main' in this case (no package name set)
 unless (-f 'main.dbm') {
 	print STDERR "Script can only be run from the examples directory or wherever the main.dbm file is.\n";
 }
 
 use Package::Transporter sub{eval shift}, sub {
-	my $generator = Package::Transporter::Generator::Eponymous_Tie->new($_[0]);
+	my $generator = Package::Transporter::Generator::Homonymous_Tie->new($_[0]);
 	$generator->prototypes();
 	$_[0]->register_potential($generator, 'FOR_SELF');
 };

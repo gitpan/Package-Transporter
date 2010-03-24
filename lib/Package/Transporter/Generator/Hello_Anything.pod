@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Hello_Anything - full example from synopsis
+Package::Transporter::Generator::Hello_Anything - Full example from synopsis
 
 =head1 SYNOPSIS
 

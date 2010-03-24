@@ -2,17 +2,17 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Eponymous_Packages - subroutines from the same package in a different file
+Package::Transporter::Generator::Homonymous_Packages - Subroutines from the same package in a different file
 
 =head1 SYNOPSIS
 
 	use strict;
 	
-	# eponymous means the same package name ... look for "main.pm"
-	use lib 'eponymous_package';
+	# homonymous means the same package name ... look for "main.pm"
+	use lib 'homonymous_package';
 	
 	use Package::Transporter sub{eval shift}, sub {
-		$_[0]->register_potential('::Eponymous_Packages', 'FOR_SELF', '');
+		$_[0]->register_potential('::Homonymous_Packages', 'FOR_SELF', '');
 	};
 	
 	yn(potentially_defined('hello_worlds'));
@@ -32,7 +32,7 @@ Prototype definitions aren't supported, yet. No logging, no caching either. Brea
 
 Set the search path via @INC or give directory names when setting up the generator manually. Example:
 
-	my $generator = $_[0]->create_generator('::Eponymous_Packages', 
+	my $generator = $_[0]->create_generator('::Homonymous_Packages', 
 		'/search/path/for/modules', '/another/patch');
 
 

@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Path_Partition - partitions the search path for rules
+Package::Transporter::Path_Partition - Partitions the search path for rules
 
 =head1 SYNOPSIS
 

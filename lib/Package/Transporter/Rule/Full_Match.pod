@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Rule::Full_Match - also match the package name
+Package::Transporter::Rule::Full_Match - Also match the package name
 
 =head1 SYNOPSIS
 

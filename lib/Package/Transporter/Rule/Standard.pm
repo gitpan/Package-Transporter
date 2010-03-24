@@ -27,7 +27,7 @@ sub new {
 		$self->[ATB_PRE_SELECT][1] = '';
 	}
 
-	$self->[ATB_SUB_MATCH] = $self->create_matcher($sub_name, '_');
+	$self->[ATB_SUB_MATCH] = $self->create_matcher($sub_name);
 
 	Internals::SvREADONLY(@{$self}, 1);
 	return($self);
@@ -46,7 +46,7 @@ sub release {
 }
 
 sub create_matcher {
-	my ($self, $name, $separator) = (shift, shift, shift);
+	my ($self, $name) = (shift, shift);
 
 	my $matcher;
 	my $name_ref = ref($name);
@@ -58,8 +58,7 @@ sub create_matcher {
 		$matcher = sub { 1 };
 	} elsif ($name =~ m,[^\w\:],) {
 		$matcher = sub { $_[1] =~ m,$name,o };
-	} elsif ($matcher = length($separator)
-	and (substr($name, -$matcher, $matcher) eq $separator)) {
+	} elsif (substr($name, -1, 1) eq '_') {
 		my $l = length($name);
 		$matcher = sub { ($name eq substr($_[1], 0, $l)) };
 	} else {

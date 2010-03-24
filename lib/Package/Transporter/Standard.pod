@@ -1,0 +1,44 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Standard - The class behind $_[0]
+
+=head1 SYNOPSIS
+
+See the $_[0] in the documentation of L<Package::Transporter>.
+
+=head1 DESCRIPTION
+
+Package::Transporter::Standard does all the package-specific work like creating an individual AUTOLOAD subroutine or managing the visit point.
+
+=head1 PUBLIC INTERFACE REFERENCE
+
+The following methods belong to the  public interface of Package::Transporter::Standard.
+
+=over 8
+
+=item B<name> - the name of the associated package
+
+=item B<search> - the search path
+
+=item B<set_visit_point> - set the visit point
+
+=item B<transport> - transport \$code to the visit point
+
+=item B<create_generator> - convenient way to get ::Generator->new(..)
+
+=item B<register_potential> - convenient way to issue a potential rule
+
+=item B<register_drain> - convenient way to issue a potential rule
+
+=item B<implement_potential> - like a manual call to AUTOLOAD; however, no parameters are passed and no actual subroutine call is done.
+
+=back
+
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

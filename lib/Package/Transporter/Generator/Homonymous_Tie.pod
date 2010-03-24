@@ -2,13 +2,13 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Eponymous_Tie - subroutines from a DB file
+Package::Transporter::Generator::Homonymous_Tie - Subroutines from a DB file of the same name as the package
 
 =head1 SYNOPSIS
 
 	use strict;
 	Package::Transporter::again sub{eval shift}, sub {
-		$_[0]->register_potential('::Eponymous_Tie', 'FOR_SELF', undef);
+		$_[0]->register_potential('::Homonymous_Tie', 'FOR_SELF', undef);
 	};
 	
 	yn(potentially_defined('hello_worlds'));
@@ -25,7 +25,7 @@ Package::Transporter::Generator::Eponymous_Tie - subroutines from a DB file
 
 The generator can be used to keep the subroutines of a module in a DB file. In case your module has a huge number of subroutines, out of which only a few are typically used, keeping the subroutines in an external source might conserve time and memory.
 
-Eponymous means the same name. This generator uses the subroutine name as a key to a DB-file with the same base name as the package file. Example:
+Homonymous means the same name. This generator uses the subroutine name as a key to a DB-file with the same base name as the package file. Example:
 
 	Package: The::Requesting::Package
 	Package File: /opt/perl5/5.10.0/The/Requesting/Package.pm
@@ -34,7 +34,7 @@ Eponymous means the same name. This generator uses the subroutine name as a key 
 
 The generator extracts all keys from the DB-file and uses that for rule matches. Newly added keys will only be seen on the next start of the program.
 
-When running under -c ('syntax check only'), the module will load all definitions from the eponymous db file. This reduces the chance of unpleasant surprises.
+When running under -c ('syntax check only'), the module will load all definitions from the homonymous db file. This reduces the chance of unpleasant surprises.
 
 =head2 Prototypes
 
@@ -43,7 +43,7 @@ Prototype definitions are supported, but have to be explicitely requested. It on
 The prototypes are given by appending the string '-prototype' to the key. See 'hello_world-prototype' below.
 
 	Package::Transporter::again sub{eval shift}, sub {
-	        my $generator = Package::Transporter::Generator::Eponymous_Tie->new($_[0]);
+	        my $generator = Package::Transporter::Generator::Homonymous_Tie->new($_[0]);
 	        $generator->prototypes($_[0]);
 	        $_[0]->register_potential($generator, 'FOR_SELF', $generator->matcher($_[0]));
 	}

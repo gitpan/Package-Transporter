@@ -3,9 +3,9 @@ use strict;
 use warnings;
 use Carp qw();
 
-our $VERSION = '0.84';
+our $VERSION = '0.85';
 
-use Package::Transporter::Package;
+use Package::Transporter::Standard;
 my $PACKAGES = {};
 
 my $obtain = sub {
@@ -13,7 +13,7 @@ my $obtain = sub {
 	if (exists($PACKAGES->{$pkg_name})) {
 		$PACKAGES->{$pkg_name}->set_visit_point($visit_point);
 	} else {
-		$PACKAGES->{$pkg_name} = Package::Transporter::Package
+		$PACKAGES->{$pkg_name} = Package::Transporter::Standard
 			->new($pkg_name, $visit_point);
 	}
 	return($PACKAGES->{$pkg_name});
@@ -37,7 +37,7 @@ sub find_generator($@) {
 	return(undef);
 }
 
-sub import {
+sub import($;) {
 	my ($class) = (shift);
 
 	return unless (exists($_[0]));

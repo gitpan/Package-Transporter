@@ -9,15 +9,13 @@ use parent qw(
 our $VERBOSE = 1;
 
 sub ATB_PKG() { 0 };
-sub ATB_SUGGESTSIONS() { 1 };
+sub ATB_SUGGESTIONS() { 1 };
 
 sub _init {
 	my ($self) = (shift);
 
-	unless (defined($self->[ATB_SUGGESTSIONS])) {
-		$self->[ATB_SUGGESTSIONS] =
-			Package::Transporter::Generator::Suggested_Use::Suggestions->new();
-	}
+	$self->[ATB_SUGGESTIONS] //=
+		Package::Transporter::Generator::Suggested_Use::Suggestions->new();
 	return;
 }
 
@@ -26,7 +24,7 @@ sub matcher {
 
 	return(sub {
 		my $ref = Scalar::Util::blessed($_[2]) ? 'OBJECT' : ref($_[2]);
-		return (defined($self->[ATB_SUGGESTSIONS]->lookup($_[1], $ref, scalar(@_)-2)));
+		return (defined($self->[ATB_SUGGESTIONS]->lookup($_[1], $ref, scalar(@_)-2)));
 
 	});
 }
@@ -35,7 +33,7 @@ sub implement {
 	my ($self, $pkg, $sub_name) = (shift, shift, shift);
 
 	my $ref = Scalar::Util::blessed($_[0]) ? 'OBJECT' : ref($_[0]);
-	my $suggested = $self->[ATB_SUGGESTSIONS]->lookup($sub_name, $ref, scalar(@_));
+	my $suggested = $self->[ATB_SUGGESTIONS]->lookup($sub_name, $ref, scalar(@_));
 
 	unless (defined($suggested)) {
 		return($self->failure(undef, $sub_name, '::Suggested_Use [no suggestion found]'));

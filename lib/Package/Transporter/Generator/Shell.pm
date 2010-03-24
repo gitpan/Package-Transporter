@@ -22,8 +22,7 @@ sub implement {
 }
 
 sub matcher {
-	my ($self) = (shift);
-	return(sub { return(substr($_[1], 0, 6) eq $prefix); });
+	return(sub { return(substr($_[2], 0, 6) eq $prefix); });
 }
 
 1;

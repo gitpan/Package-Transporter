@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Constant_Function::Lowered - generate constant functions with their names as lowered values
+Package::Transporter::Generator::Constant_Function::Lowered - Generate constant functions with their names as lowered values
 
 =head1 SYNOPSIS
 

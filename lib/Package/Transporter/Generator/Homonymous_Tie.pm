@@ -1,38 +1,22 @@
-package Package::Transporter::Generator::Eponymous_Tie;
+package Package::Transporter::Generator::Homonymous_Tie;
 use strict;
 use warnings;
 use GDBM_File;
 use Fcntl;
 use parent qw(
 	Package::Transporter::Generator
+	Package::Transporter::Generator::Homonymous
 );
 
 sub ATB_PKG() { 0 };
 sub ATB_DB_FILE() { 1 };
 sub ATB_SUB_BODIES() { 2 };
 
-my %DIRECTORIES = ();
-sub eponymous_db_file($) {
-	my ($pkg_name) = (shift);
-
-	if (exists($DIRECTORIES{$pkg_name})) {
-		return($DIRECTORIES{$pkg_name});
-	}
-	my $pkg_file = $pkg_name;
-	$pkg_file =~ s,::,/,sg;
-	$pkg_file .= '.pm';
-
-	my $file_name = $INC{$pkg_file} || $pkg_file;
-	$file_name =~ s,\.pm$,.dbm,si;
-
-	$DIRECTORIES{$pkg_name} = $file_name;
-	return($file_name);
-}
-
 sub _init {
 	my ($self, $defining_pkg) = (shift, shift);
 
-	my $file_name = eponymous_db_file($defining_pkg->name);
+	my $file_name = $self->pkg_file($defining_pkg->name);
+	$file_name =~ s,\.pm$,.dbm,si;
 	tie(my %sub_bodies, 'GDBM_File', $file_name, O_RDONLY, 0);
 
 	$self->[ATB_DB_FILE] = $file_name;
@@ -71,7 +55,7 @@ sub implement {
 	my ($self, $pkg, $sub_name) = (shift, shift, shift);
 
 	unless (exists($self->[ATB_SUB_BODIES]->{$sub_name})) {
-		return($self->failure(undef, $sub_name, "::Eponymous_Tie [not in '$self->[ATB_DB_FILE]']"));
+		return($self->failure(undef, $sub_name, "::Homonymous_Tie [not in '$self->[ATB_DB_FILE]']"));
 	}
 	my $code = $self->assemble($sub_name);
 	return($pkg->transport(\$code));

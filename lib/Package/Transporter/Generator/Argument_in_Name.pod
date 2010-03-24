@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Argument_in_Name - hardwire one argument in the name of the subroutine
+Package::Transporter::Generator::Argument_in_Name - Hardwire one argument in the name of the subroutine
 
 =head1 SYNOPSIS
 

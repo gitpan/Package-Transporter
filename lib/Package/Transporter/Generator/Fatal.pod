@@ -1,0 +1,34 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Fatal - Partial bridge to Fatal.pm
+
+=head1 SYNOPSIS
+
+	use Carp;
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->register_potential('::Fatal', 'FOR_SELF', 'fatal_');
+	};
+	
+	sub yn($) { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
+	
+	yn(!defined(&fatal_open));
+	yn(potentially_defined('fatal_open'));
+	
+	fatal_open(my $F, 'a'); # open(my $F, 'a') || die...
+	
+	yn(defined(&fatal_open));
+	exit(0);
+
+=head1 DESCRIPTION
+
+A proxy to syscall-related subroutines, which indicate an error via $!. Removes  the fatal_ prefix and executes the rest. Makes any error fatal through die.
+
+Respects any prototype definition of the original command and submits the arguments accordingly with the help of Fatal.pm. However, no prototype support for prefixed command, yet.
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

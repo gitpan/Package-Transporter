@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Require_Customized - include customized file content
+Package::Transporter::Generator::Require_Customized - Include customized file content
 
 =head1 SYNOPSIS
 

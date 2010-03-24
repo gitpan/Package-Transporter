@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Rule::Gone - make a rule ineffective
+Package::Transporter::Rule::Gone - Make a rule ineffective
 
 =head1 SYNOPSIS
 

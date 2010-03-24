@@ -43,7 +43,7 @@ sub implement {
 	my $rv;
 	unless (exists($sub_stubs->{$sub_name})) {
 		unless (exists($sub_stubs->{'*'})) {
-			return($self->failure(undef, $sub_name, "::Eponymous_Tie [not in '$self->[ATB_STUBS_FILE]']"));
+			return($self->failure(undef, $sub_name, "::Homonymous_Tie [not in '$self->[ATB_STUBS_FILE]']"));
 		} else {
 			$rv = $sub_stubs->{'*'};
 		}

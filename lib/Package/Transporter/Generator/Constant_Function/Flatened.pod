@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Constant_Function::Flatened - generate constant functions with manually set flatened values
+Package::Transporter::Generator::Constant_Function::Flatened - Generate constant functions with manually set flatened values
 
 =head1 SYNOPSIS
 

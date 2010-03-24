@@ -1,12 +1,6 @@
 #!/usr/bin/perl -W -T
 use strict;
 
-#sub AUTOLOAD {
-#	print STDERR 'Hallo Welt.';
-#}
-BEGIN { $Package::Transporter::Package::OVERWRITE = 1;
-	$Package::Transporter::Package::DEBUG = 1; }
-
 use Package::Transporter sub{eval shift}, sub {
 	$_[0]->register_drain('::Flatened', 'FOR_ANY', 'IS_',
 		TRUE => 1, FALSE => 0);
@@ -16,12 +10,7 @@ use Package::Transporter sub{eval shift}, sub {
 	$_[0]->register_potential($yn, 'FOR_ANY', 'yn');
 };
 
-sub AUTOLOAD {
-	print STDERR 'Hallo Welt.';
-}
-
 print STDOUT ((IS_TRUE == 1) ? 'Ok' : 'Disorder'), "\n";
-#print STDOUT hallo_welt();
 
 package Synopsis;
 use Package::Transporter sub{eval shift}, sub {
@@ -34,7 +23,6 @@ use Package::Transporter sub{eval shift}, sub {
 print "ATB_WORLD: ", ATB_WORLD, "\n";
 sub hello_world { print "Hello World.\n"; }
 
-
 package Synopsis::Desc1;
 use Package::Transporter sub{eval shift};
 
@@ -45,7 +33,6 @@ print STDOUT ((IS_TRUE == 1) ? 'Ok' : 'Disorder'), "\n";
 hello_world(); # first rule
 
 yn(defined(&hello_world));
-
 
 package sisponyS::Desc2;
 BEGIN {our @ISA = ('Synopsis')}; # to be correct

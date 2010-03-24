@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Constant_Function::Enumerated - generate constant functions with enumerated values
+Package::Transporter::Generator::Constant_Function::Enumerated - Generate constant functions with enumerated values
 
 =head1 SYNOPSIS
 
@@ -26,6 +26,17 @@ Package::Transporter::Generator::Constant_Function::Enumerated - generate consta
 =head1 DESCRIPTION
 
 Enumeration is restarted in each affected package. (Caution: this is implicit drain.)
+
+=head2 See Also
+
+The following packages provide support for objects as array references and are therefore loosely related to Transporter: L<Class-Gomor> and L<Class-ArrayObjects>.
+
+The following packages treat arrays as objects, which this base class is not about, but that also clarifies things: 
+L<List::oo>, 
+L<Class-Builtin>, 
+L<Devel-Ladybug>, and
+L<Object-Array>.
+
 
 =head1 ANYTHING ELSE
 

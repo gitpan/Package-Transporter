@@ -1,0 +1,35 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Lite - less features, less code
+
+=head1 SYNOPSIS
+
+	use strict;
+	use Package::Transporter::Lite sub{eval shift}, sub {
+		my $yn = q{
+	 		return(q{print STDOUT ($_[0] ? 'Yes' : 'No'), "\n";});
+		};
+		$_[0]->register_potential($yn, 'yn');
+		$_[0]->register_potential('::Hello_Anything', 'hello_');
+	};
+	
+	yn(!defined(&hello_world));
+	hello_world(); # first rule
+	yn(defined(&hello_world));
+	
+	exit(0);
+
+=head1 DESCRIPTION
+
+Package::Transporter::Lite is a trimmed down version for testing purposes.
+
+The method register_potential doesn't take a wild card for distribution to other packages.
+
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

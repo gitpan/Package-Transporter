@@ -1,25 +1,18 @@
-package Package::Transporter::Generator::Eponymous_Directory;
+package Package::Transporter::Generator::Homonymous_Directory;
 use strict;
 use warnings;
 use parent qw(
 	Package::Transporter::Generator
+	Package::Transporter::Generator::Homonymous
 );
 
 sub ATB_PKG() { 0 };
 sub ATB_BASE_DIR() { 1 };
 
-my %DIRECTORIES = ();
-sub eponymous_base_dir($) {
-	my ($pkg_name) = (shift);
+sub _init {
+	my ($self, $defining_pkg) = (shift, shift);
 
-	if (exists($DIRECTORIES{$pkg_name})) {
-		return($DIRECTORIES{$pkg_name});
-	}
-	my $pkg_file = $pkg_name;
-	$pkg_file =~ s,::,/,sg;
-	$pkg_file .= '.pm';
-
-	my $base_dir = $INC{$pkg_file} || $pkg_file;
+	my $base_dir = $self->pkg_file($defining_pkg->name);
 	$base_dir =~ s,\.pm$,,si;
 	
 	unless (-e $base_dir) {
@@ -28,20 +21,15 @@ sub eponymous_base_dir($) {
 	unless (-d $base_dir) {
 		Carp::confess("Can't load from directory '$base_dir' - not a directory.");
 	}
+	$self->[ATB_BASE_DIR] = $base_dir;
 
-	$DIRECTORIES{$pkg_name} = $base_dir;
-	return($base_dir);
-}
-
-sub _init {
-	my ($self, $defining_pkg) = (shift, shift);
-
-	$self->[ATB_BASE_DIR] = eponymous_base_dir($defining_pkg->name);
 	if($^C == 1) {
-		opendir(D, $self->[ATB_BASE_DIR])
-		|| Carp::confess("opendir: $!");
-		my @names = readdir(D);
-		closedir(D);
+		opendir(D, $base_dir)
+		|| Carp::confess("$base_dir: opendir: $!");
+		my @names = readdir(D)
+		|| Carp::confess("$base_dir: readdir: $!");
+		closedir(D)
+		|| Carp::confess("$base_dir: closedir: $!");
 
 		my @file_names = map("$self->[ATB_BASE_DIR]/$_",
 			grep($_ =~ m/\.pl$/, @names));

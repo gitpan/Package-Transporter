@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Shell - bridge to Shell.pm
+Package::Transporter::Generator::Shell - Bridge to Shell.pm
 
 =head1 SYNOPSIS
 

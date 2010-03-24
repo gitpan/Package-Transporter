@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator - base class for subroutine generators
+Package::Transporter::Generator - Base class for subroutine generators
 
 =head1 SYNOPSIS
 

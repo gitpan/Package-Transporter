@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Package::Transporter::Generator::Anonymous - minimal generator with anonymous subroutines
+Package::Transporter::Generator::Anonymous - Minimal generator with anonymous subroutines
 
 =head1 SYNOPSIS
 

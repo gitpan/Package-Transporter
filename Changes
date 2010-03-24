@@ -1,6 +1,11 @@
+0.85	23 March 2010
+	- removed SIGNATURE, it has little benefit and produces bug reports
+	- new generators
+	- Package::Transporter::Lite
+
 0.84	17 March 2010
-	- added ::Eponymous_Packages
-	- made other ::Eponymous modules more robust (check for -c)
+	- added ::Homonymous_Packages
+	- made other ::Homonymous modules more robust (check for -c)
 	- complemented ::Interactive
 
 0.83	17 March 2010
