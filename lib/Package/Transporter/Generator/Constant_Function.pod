@@ -161,7 +161,7 @@ Only the public interface is documented in the following.
 
 =item B<new>
 
-The constructor. Calling parameters: package visiting point (subroutine reference). Return value: a Package::Transporter::Package object.
+The constructor. Calling parameters: package visiting point (subroutine reference). Return value: a Package::Transporter::Standard object.
 
 =item B<drop>
 
@@ -211,7 +211,7 @@ under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-The manual page for L<Package::Transporter::Package> contains the details
+The manual page for L<Package::Transporter> contains the details
 of using and extending Package::Transporter.
 
 The package L<POE> is features a lot of constant functions

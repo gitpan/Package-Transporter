@@ -51,6 +51,7 @@ lib/Package/Transporter/Generator/Anonymous.pod
 lib/Package/Transporter/Generator/Argument_in_Name.pm
 lib/Package/Transporter/Generator/Argument_in_Name.pod
 lib/Package/Transporter/Generator/Auto_Autoload.pm
+lib/Package/Transporter/Generator/Auto_Autoload.pod
 lib/Package/Transporter/Generator/Automatic_Require.pm
 lib/Package/Transporter/Generator/Automatic_Require.pod
 lib/Package/Transporter/Generator/Constant_Function.pm
@@ -82,7 +83,6 @@ lib/Package/Transporter/Generator/Interactive.pm
 lib/Package/Transporter/Generator/Interactive.pod
 lib/Package/Transporter/Generator/Pipe.pm
 lib/Package/Transporter/Generator/Pipe.pod
-lib/Package/Transporter/Generator/Prefixed_Names.pm
 lib/Package/Transporter/Generator/Require_Customized.pm
 lib/Package/Transporter/Generator/Require_Customized.pod
 lib/Package/Transporter/Generator/Shell.pm

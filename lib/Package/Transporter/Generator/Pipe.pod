@@ -36,8 +36,8 @@ Security consideration: anybody with access to the fifo or the directory might g
 	# The subroutine 'hallo_welt' is missing in package 'main'.
 	#----------------------------------------------------------------------------
 	 at /home/wt/products/Perl_Modules/Package-Transporter/development/lib/Package/Transporter/Generator.pm line 23
-	        Package::Transporter::Generator::run('Package::Transporter::Generator::Pipe=ARRAY(0x8b3920)', 'Package::Transporter::Package=ARRAY(0x8b3b00)', 'main', 'hallo_welt') called at /home/wt/products/Perl_Modules/Package-Transporter/development/lib/Package/Transporter/Package.pm line 297
-	        Package::Transporter::Package::autoload('Package::Transporter::Package=ARRAY(0x8b3b00)', 'main::hallo_welt') called at (eval 3) line 6
+	        Package::Transporter::Generator::run('Package::Transporter::Generator::Pipe=ARRAY(0x8b3920)', 'Package::Transporter::Standard=ARRAY(0x8b3b00)', 'main', 'hallo_welt') called at /home/wt/products/Perl_Modules/Package-Transporter/development/lib/Package/Transporter/Standard.pm line 297
+	        Package::Transporter::Standard::autoload('Package::Transporter::Standard=ARRAY(0x8b3b00)', 'main::hallo_welt') called at (eval 3) line 6
 	        main::AUTOLOAD() called at pipe.pl line 9
 	#----------------------------------------------------------------------------
 	$VAR1 = [];

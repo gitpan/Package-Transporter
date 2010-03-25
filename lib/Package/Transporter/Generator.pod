@@ -70,7 +70,7 @@ You want to see the examples directory and the .pm files in Generator.
 
 =head1 PUBLIC METHODS
 
-The following methods belong to the  public interface of Package::Transporter::Package.
+The following methods belong to the  public interface of Package::Transporter::Generator.
 
 =over 8
 

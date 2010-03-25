@@ -29,7 +29,7 @@ Use the above methods to customize the search path for rules. First and fourth a
 
 =head1 PUBLIC METHODS
 
-The following methods belong to the  public interface of Package::Transporter::Package.
+The following methods belong to the  public interface of Package::Transporter::Path_Partition.
 
 =over 8
 

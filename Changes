@@ -1,7 +1,10 @@
-0.85	23 March 2010
+0.86	25 March 2010
+	- Fixed test script to check for Package::Transporter::Standard
+
+0.85	24 March 2010
 	- removed SIGNATURE, it has little benefit and produces bug reports
-	- new generators
-	- Package::Transporter::Lite
+        - new generators
+        - Package::Transporter::Lite
 
 0.84	17 March 2010
 	- added ::Homonymous_Packages

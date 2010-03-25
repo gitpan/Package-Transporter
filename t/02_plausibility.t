@@ -9,7 +9,7 @@ ok($@ !~ m/Package::Transporter/, 'T000: Not us, yet.');
 package Basic_Test1;
 use Test::Simple;
 use Package::Transporter sub{eval shift}, sub {
-	ok(ref($_[0]) eq 'Package::Transporter::Package',
+	ok(ref($_[0]) eq 'Package::Transporter::Standard',
 		'T001: Convenience object of right type.');
 	ok($_[0]->name eq 'Basic_Test1',
 		'T002: Correct name.');

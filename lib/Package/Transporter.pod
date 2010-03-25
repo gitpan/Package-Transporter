@@ -262,7 +262,7 @@ Every package using Package::Transporter gets an individual AUTOLOAD subroutine.
 
 =head1 PUBLIC INTERFACE REFERENCE
 
-The following methods belong to the  public interface of Package::Transporter::Package.
+The following methods belong to the  public interface of Package::Transporter.
 
 =over 8
 
