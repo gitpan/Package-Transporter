@@ -62,93 +62,107 @@ Package::Transporter provides a concept for automated loading and distribution o
 
 Automated drain is mostly practical to generate constant functions and to distribute them into packages. Example: 'sub ATB_PRICE() { 0 }' as a symbolic index to the first element of a list - but without giving the full definition manually. Automated potential provides a leaner alternative to export, because you don't have to manually optimize the use of your namespace. Example for manual optimization: 'use POSIX qw(O_EXCL);'
 
+=head2 Visit Points
+
+By default a missing subroutine is defined inside a package via an eval. The eval is passed around through the anonymous subroutine reference sub{eval shift}. This construct is called a visit point for the purpose of this documentation.
+
+It is actually a fast solution, easy to understand, and with straightforward results, bearing only a few surprises. Direct symbol table manipulations can't achieve the same, so its futile to discuss whether they are faster or slower with regards to the overall effort.
+
+Every package using Package::Transporter gets an individual AUTOLOAD subroutine. That appeared to be the most robust approach and allows for a 'use strict' without exceptions.
+
+
 =head2 Subroutine Generators
 
 Subroutines are brought into life by generators. The following generators are shipped with Transporter and come with example code. Partial names refer to the base name Package::Transporter::Generator. Some generators are experimental or serve testing purposes.
 
 =over 8
 
-=item B<::After_END|Package::Transporter::Generator::After_END>
+=item L<::After_END|Package::Transporter::Generator::Potential::After_END>
 
 Copies missing subroutines from the __END__ section of the same package.
 
 
-=item B<::Anonymous|Package::Transporter::Generator::Anonymous>
+=item L<::Anonymous|Package::Transporter::Generator::Potential::Anonymous>
 
 Minimal generator for wrapping of pre-defined anonymous subroutines.
 
 
-=item B<::Argument_in_Name|Package::Transporter::Generator::Argument_in_Name>
+=item L<::Argument_in_Name|Package::Transporter::Generator::Potential::Argument_in_Name>
 
 Hardwire one argument into the name of the subroutine. 
 
 
-=item B<::Automatic_Require|Package::Transporter::Generator::Automatic_Require>
+=item L<::Automatic_Require|Package::Transporter::Generator::Universal::Automatic_Require>
 
 Attempt an 'require MODULE' for a missing MODULE::subroutine.
 
 
-=item B<::Export|Package::Transporter::Generator::Export>
+=item L<::Export|Package::Transporter::Generator::Potential::Export>
 
 On-demand (proxy) export
 
 
-=item B<::Fatal|Package::Transporter::Generator::Fatal>
+=item L<::Fatal|Package::Transporter::Generator::Potential::Fatal>
 
 Partial bridge to Fatal.pm
 
 
-=item B<::Get_Set_Methods|Package::Transporter::Generator::Get_Set_Methods>
+=item L<::Get_Set_Methods|Package::Transporter::Generator::Potential::Get_Set_Methods>
 
 Automatically created accessors and mutators
 
 
-=item B<::Hello_Anything|Package::Transporter::Generator::Hello_Anything>
+=item L<::Hello_Anything|Package::Transporter::Generator::Potential::Hello_Anything>
 
 Full example from synopsis.
 
 
-=item B<::Homonymous_Packages|Package::Transporter::Generator::Homonymous_Packages>
+=item L<::Homonymous_Packages|Package::Transporter::Generator::Potential::Homonymous_Packages>
 
 Subroutines from the same package in a different file
 
 
-=item B<::Homonymous_Tie|Package::Transporter::Generator::Homonymous_Tie>
+=item L<::Homonymous_Tie|Package::Transporter::Generator::Potential::Homonymous_Tie>
 
 Subroutines from a DB file of the same name as the package
 
 
-=item B<::Interactive|Package::Transporter::Generator::Interactive>
+=item L<::Interactive|Package::Transporter::Generator::Potential::Interactive>
 
 AUTOLOAD interactive (write missing subroutines as the running program encounters them)
 
 
-=item B<::Pipe|Package::Transporter::Generator::Pipe>
+=item L<::Pipe|Package::Transporter::Generator::Potential::Pipe>
 
 AUTOLOAD via a Unix pipe
 
 
-=item B<::Require_Customized|Package::Transporter::Generator::Require_Customized>
+=item L<::Pipe|Package::Transporter::Generator::Universal::Re_Blessed>
+
+Delayed object construction through a helper object.
+
+
+=item L<::Require_Customized|Package::Transporter::Generator::Potential::Require_Customized>
 
 Include customized file content
 
 
-=item B<::SQL_Table|Package::Transporter::Generator::SQL_Table>
+=item L<::SQL_Table|Package::Transporter::Generator::Potential::SQL_Table>
 
 Store your subroutines in a database
 
 
-=item B<::Shell|Package::Transporter::Generator::Shell>
+=item L<::Shell|Package::Transporter::Generator::Potential::Shell>
 
 Bridge to Shell.pm
 
 
-=item B<::Simple_Stubs|Package::Transporter::Generator::Simple_Stubs>
+=item L<::Simple_Stubs|Package::Transporter::Generator::Potential::Simple_Stubs>
 
 Simple subroutines stubs
 
 
-=item B<::Suggested_Use|Package::Transporter::Generator::Suggested_Use>
+=item L<::Suggested_Use|Package::Transporter::Generator::Potential::Suggested_Use>
 
 Issue the right 'use MODULE' to get the missing subroutine
 
@@ -249,15 +263,6 @@ Whether a package has potential for a subroutine can be tested with the utility 
 potentially_can does not return a subroutine reference, because it is about potential and thus it does not do autovivification. Beside that, potentially_can is potentially expensive. Remember Perl supports multiple inheritance, so that a search for rules has to go through the tree of parent classes (linearised though) and through the name hierarchy of each class. A lot of each to ensure that the method name in question springs into existence in the right defining parent class.
 
 There is no potentially_exists, because the rule system in Package::Transporter doesn't distinguish between defined and exists, because AUTOLOAD doesn't tell whether a prototype is requested or a full subroutine definition. It would be useful to automatically generate prototypes, which would solve the problem described in in the BUGS section below. Background: 'exists' considers even prototypes and names treated with undef (crazy, eh?), while 'defined' only considers (fully) defined subroutines. You probably want to use the combination of can and defined for most practical purposes.
-
-
-=head2 Visit Points
-
-By default a missing subroutine is defined inside a package via an eval. The eval is passed around through the anonymous subroutine reference sub{eval shift}. This construct is called a visit point for the purpose of this documentation.
-
-It is actually a fast solution, easy to understand, and with straightforward results, bearing only a few surprises. Direct symbol table manipulations can't achieve the same, so its futile to discuss whether they are faster or slower with regards to the overall effort.
-
-Every package using Package::Transporter gets an individual AUTOLOAD subroutine. That appeared to be the most robust approach and allows for a 'use strict' without exceptions.
 
 
 =head1 PUBLIC INTERFACE REFERENCE

@@ -2,8 +2,8 @@
 use strict;
 use Test::Simple tests => 12;
 
-use Package::Transporter::Pre_Selection;
-my $rules = Package::Transporter::Pre_Selection->new();
+use Package::Transporter::Hierarchy::Potential;
+my $rules = Package::Transporter::Hierarchy::Potential->new();
 ok(scalar(%$rules) == 0, 'T501: Starting with empty object.');
 
 local($@);

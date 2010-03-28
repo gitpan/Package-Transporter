@@ -1,0 +1,76 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Potential::Export - On-demand (proxy) export
+
+=head1 SYNOPSIS
+
+	use strict;
+	
+	package Synopsis;
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->register_potential('::Export', 'FOR_BRANCH',
+			['hello_world', 'yn']);
+	};
+	
+	sub hello_world() { print "Hello World.\n"; };
+	sub yn() { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
+
+	
+	package Synopsis::Ex1;
+	use Package::Transporter sub{eval shift};
+	
+	yn(!defined(&hello_world));
+	yn(potentially_defined('hello_world'));
+
+	hello_world();
+
+	yn(defined(&hello_world));
+	exit(0);
+	
+=head1 DESCRIPTION
+
+Takes the requested subroutine from the given package name of the defining package, if no explicit package name is given.
+
+'FOR_SELF' wildcard makes only sense while acting as a proxy.
+
+Set this package global to allow the generator to eventually trigger other generators. Nothing wrong with that, it just exists to highlight what to look for when writing generators.
+
+$Package::Transporter::Generator::Potential::Closures_Demo::ONLY_DEFINED_ORIGINALS = 0;
+
+=head2 Proxy Mode
+
+An package name from where to take the subroutines from can be specified as follows.
+
+	use strict;
+	
+	package Synopsis;
+	use Package::Transporter sub{eval shift}, sub {
+		my $generator = $_[0]->create_generator('::Export', 
+			'POSIX', 'Data::Dumper');
+		$_[0]->register_potential($generator, 'FOR_SELF');
+	};
+	
+	sub yn($) { print STDERR ($_[0] ? 'Yes' : 'No'), "\n"; };
+	
+	yn(!defined(&O_EXCL));
+	yn(potentially_defined('O_EXCL'));
+	
+	print STDERR O_EXCL(), "\n"; # now points to POSIX::O_EXCL()
+	
+	yn(defined(&O_EXCL));
+	exit(0);
+
+Note that the Export generator will do an 'require POSIX' and will (in absense of an explicit name definition) install a subroutine name matcher to check with what is available in the POSIX module.
+
+=head2 Prototypes
+
+Prototype definitions are not supported. Although the rule could see which subroutines are for export in the defining package, get their prototype definition with prototype() and submit a prototype to each requesting package. This is unlikely to be implemented unless prototypes are honored for AUTOLOADed subroutines.
+
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

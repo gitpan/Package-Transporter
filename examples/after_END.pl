@@ -3,7 +3,7 @@ use strict;
 
 use Package::Transporter sub{eval shift}, sub {
 	my $generator = $_[0]->create_generator(
-		'::After_END', 	__FILE__);
+		'::Potential::After_END', __FILE__);
 	$_[0]->register_potential($generator, 'FOR_SELF');
 };
 

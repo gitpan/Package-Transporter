@@ -1,7 +1,6 @@
 #!/usr/bin/perl -W
 use strict;
 use Carp qw();
-use Package::Transporter::Generator::Simple_Stubs;
 
 # homonymous means the same name as the package file base name,
 # which is 'main' in this case (no package name set)
@@ -10,7 +9,7 @@ unless (-f 'simple_stubs.txt') {
 }
 
 use Package::Transporter sub{eval shift}, sub {
-	my $generator = $_[0]->create_generator('::Simple_Stubs',
+	my $generator = $_[0]->create_generator('::Potential::Simple_Stubs',
 		'simple_stubs.txt');
 	$_[0]->register_potential($generator, 'FOR_SELF');
 };

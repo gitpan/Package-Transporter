@@ -5,20 +5,10 @@ use warnings;
 sub ATB_PATH() { 0 };
 sub ATB_123() { 1 };
 
-sub package_hierarchy {
-	my $name = shift;
-	my @hierarchy = ($name);
-	while($name =~ s,\w+(::)?$,,s) {
-		push(@hierarchy, $name);
-	}
-	return(\@hierarchy);
-}
-
 # ugly, but encapsulated :)
 sub new {
-	my ($class, $pkg_name) = @_;
+	my ($class, $search) = @_;
 
-	my $search = package_hierarchy($pkg_name);
 	my $self = [$search, [0, 1, 1, $#$search-1, $#$search, 1]];
 	bless($self, $class);
 	Internals::SvREADONLY(@{$self}, 1);

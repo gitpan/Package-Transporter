@@ -17,12 +17,20 @@ sub ATB_EXISTING() { 4 };
 sub ATB_MY_AUTOLOAD() { 5 };
 
 use Package::Transporter::Rule::Standard;
-use Package::Transporter::Pre_Selection;
+use Package::Transporter::Hierarchy::Potential; 
+use Package::Transporter::Hierarchy::Drain; 
+use Package::Transporter::Hierarchy::Universal; 
 use Package::Transporter::Path_Partition;
 use Package::Transporter::Generator;
-use Package::Transporter::Generator::Anonymous;
+use Package::Transporter::Generator::Potential::Anonymous;
 
-my $RULES = Package::Transporter::Pre_Selection->new(); 
+my %HIERARCHIES = (
+	'potential' => Package::Transporter::Hierarchy::Potential->new(),
+	'drain' => Package::Transporter::Hierarchy::Drain->new(),
+	'universal' => Package::Transporter::Hierarchy::Universal->new(),
+);
+
+my $universal_autoload = undef;
 
 our $OVERWRITE //= 0;
 our $DEBUG //= 0;
@@ -59,13 +67,23 @@ my $potentially_defined = q{
 	return(\&potentially_defined);
 };
 
+sub package_hierarchy {
+	my $name = shift;
+	my @hierarchy = ($name);
+	while($name =~ s,\w+(::)?$,,s) {
+		push(@hierarchy, $name);
+	}
+	return(\@hierarchy);
+}
+
 sub new {
 	my ($class, $pkg_name, $visit_point) = @_;
 
+	my $search = package_hierarchy($pkg_name);
 	my $self = [
 		$pkg_name, 
 		$visit_point,
-		Package::Transporter::Path_Partition->new($pkg_name)
+		Package::Transporter::Path_Partition->new($search)
 	];
 	bless($self, $class);
 
@@ -102,31 +120,31 @@ sub register_potential {
 	if (scalar(@_) == 0) { # no further arguments
 		if (ref($potential) eq 'ARRAY') {
 			$potential = Package::Transporter::Rule::Standard->new(@$potential);
-			$RULES->register_rules($potential, $potential->pre_select);
+			$HIERARCHIES{'potential'}->register_rules($potential, $potential->pre_select);
 		} elsif (Scalar::Util::blessed($potential)) {
-			$RULES->register_rules($potential, $potential->pre_select);
+			$HIERARCHIES{'potential'}->register_rules($potential, $potential->pre_select);
 		} else {
 			Carp::confess("Wrong type of argument.");
 		}
 		return($potential);
 	}
 
-	my $generator = $self->recognize($potential, '');
+	my $generator = $self->recognize($potential, '::Potential');
 
 	my @pkg_names = ($self->[ATB_PKG_NAME]);
-	my $wildcard = shift;
-	if ($wildcard eq 'FOR_SELF') {
-#	} elsif ($wildcard eq 'FOR_FAMILY') {
-#		Carp::confess("In the context of potential, there is no wildcard 'FOR_FAMILY'.\n");
-	} elsif ($wildcard eq 'FOR_BRANCH_SELF') {
+	my $wild_card = shift;
+	if ($wild_card eq 'FOR_SELF') {
+#	} elsif ($wild_card eq 'FOR_FAMILY') {
+#		Carp::confess("In the context of potential, there is no wild_card 'FOR_FAMILY'.\n");
+	} elsif ($wild_card eq 'FOR_BRANCH_SELF') {
 		push(@pkg_names, $pkg_names[0]);
 		$pkg_names[1] .= '::';
-	} elsif ($wildcard eq 'FOR_BRANCH') {
+	} elsif ($wild_card eq 'FOR_BRANCH') {
 		$pkg_names[0] .= '::';
-	} elsif ($wildcard eq 'FOR_ANY') {
+	} elsif ($wild_card eq 'FOR_ANY') {
 		$pkg_names[0] = '';
 	} else {
-		Carp::confess("Don't know what to do with wildcard '$wildcard'.\n");
+		Carp::confess("Don't know what to do with wild_card '$wild_card'.\n");
 	}
 	
 	unless (defined($_[0])) {
@@ -136,58 +154,12 @@ sub register_potential {
 	}
 	
 	$potential = Package::Transporter::Rule::Standard->new($generator, \@pkg_names, @_);
-	$RULES->register_rules($potential, $potential->pre_select);
+		use Data::Dumper;
+#		print STDERR Dumper($potential);
+
+	$HIERARCHIES{'potential'}->register_rules($potential, $potential->pre_select);
 
 	return($potential);
-}
-
-sub register_drain {
-	my ($self, $drain) = (shift, shift);
-# no rules, because it is about properties
-
-	my $generator = $self->recognize($drain, '::Constant_Function');
-
-	my $pkg_name = $self->[ATB_PKG_NAME];
-	my $wildcard = shift;
-	if ($wildcard eq 'FOR_SELF') {
-		$pkg_name .= '<<';
-	} elsif ($wildcard eq 'FOR_FAMILY') {
-		$pkg_name .= '||';
-	} elsif ($wildcard eq 'FOR_BRANCH_SELF') {
-		$pkg_name .= '<>';
-	} elsif ($wildcard eq 'FOR_BRANCH') {
-		$pkg_name .= '>>';
-	} elsif ($wildcard eq 'FOR_ANY') {
-		$pkg_name = '>>';
-	} else {
-		Carp::confess("Don't know what to do with wildcard '$wildcard'.\n");
-	}
-	my $prefix = shift;
-	$RULES->register_rule($generator, $pkg_name, $prefix);
-	$generator->configure(@_);
-
-	return($generator);
-}
-
-sub implement_drain {
-	my ($self) = @_;
-
-	my $generators = $RULES->collect_generators(
-		$self->[ATB_SEARCH_PATH],
-		mro::get_linear_isa($self->[ATB_PKG_NAME]),
-		$self->[ATB_PKG_NAME]);
-
-	while(my ($prefix, $types) = each(%$generators)) {
-		while(my ($type, $line) = each(%$types)) {
-			my $main = shift(@$line);
-			$main->consume(@$line);
-			$main->run($self, $self->[ATB_PKG_NAME], $prefix);
-		}
-	}
-
-	$RULES->release($self->[ATB_PKG_NAME]);
-
-	return;
 }
 
 sub implement_potential {
@@ -208,6 +180,8 @@ sub autoload {
 	my $pkg_name = $self->[ATB_PKG_NAME];
 	if (($sub_name =~ s,^(.*)::,,) and ($pkg_name ne $1)) {
 		Carp::confess("Got a request to handle subroutine '$sub_name' for foreign package '$1' in package '$pkg_name'.");
+#		$AUTOLOAD = "$1::$sub_name";
+#		universal_autoload($self, @_);
 	}
 	return(undef) if ($sub_name eq 'DESTROY');
 #	return(undef) if ($sub_name eq 'AUTOLOAD');
@@ -240,7 +214,7 @@ sub autoload {
 
 sub find_generator {
 	my ($self, $sub_name) = (shift, shift);
-	return($RULES->lookup_rule(
+	return($HIERARCHIES{'potential'}->lookup_rule(
 		$self->[ATB_SEARCH_PATH],
 		$self->[ATB_PKG_NAME],
 		$sub_name, @_));
@@ -267,6 +241,93 @@ sub potentially_defined {
 	return(defined(shift->find_generator(@_)));
 }
 
+
+sub register_drain {
+	my ($self, $drain, $wild_card, $prefix) = (shift, shift, shift, shift);
+# no rules, because it is about properties
+
+	my $generator = $self->recognize($drain, '::Drain');
+
+	my $pkg_name = $self->[ATB_PKG_NAME];
+	if ($wild_card eq 'FOR_SELF') {
+		$pkg_name .= '<<';
+	} elsif ($wild_card eq 'FOR_FAMILY') {
+		$pkg_name .= '||';
+	} elsif ($wild_card eq 'FOR_BRANCH_SELF') {
+		$pkg_name .= '<>';
+	} elsif ($wild_card eq 'FOR_BRANCH') {
+		$pkg_name .= '>>';
+	} elsif ($wild_card eq 'FOR_ANY') {
+		$pkg_name = '>>';
+	} else {
+		Carp::confess("Don't know what to do with wild_card '$wild_card'.\n");
+	}
+	$HIERARCHIES{'drain'}->register_rule($generator, $pkg_name, $prefix);
+	$generator->configure(@_);
+
+	return($generator);
+}
+
+sub implement_drain {
+	my ($self) = @_;
+
+	my $pkg_name = $self->[ATB_PKG_NAME];
+	my $generators = $HIERARCHIES{'drain'}->collect_generators(
+		$self->[ATB_SEARCH_PATH],
+		mro::get_linear_isa($pkg_name),
+		$pkg_name);
+
+	while(my ($prefix, $types) = each(%$generators)) {
+		while(my ($type, $line) = each(%$types)) {
+			my $main = shift(@$line);
+			$main->consume(@$line);
+			$main->run($self, $pkg_name, $prefix);
+		}
+	}
+
+	$HIERARCHIES{'drain'}->release($self->[ATB_PKG_NAME]);
+
+	return;
+}
+
+my $installed = 0;
+sub register_universal {
+	my ($self, $universal, $pkg_names) = (shift, shift, shift);
+
+	unless($installed) {
+		$installed = 1;
+		*UNIVERSAL::AUTOLOAD = sub {
+			my $sub_ref = universal_autoload($self, @_);
+			goto &$sub_ref if (defined($sub_ref));
+		};
+		*UNIVERSAL::DESTROY = sub {};
+	}
+
+	my $generator = $self->recognize($universal, '::Universal');
+	$HIERARCHIES{'universal'}->register_rule($generator, $pkg_names, '');
+
+	return($generator);
+
+}
+
+our $AUTOLOAD;
+sub universal_autoload {
+	my ($self) = (shift);
+
+	unless($AUTOLOAD =~ m,^(.*)::(\w+)$,) {
+		Carp::confess("Can't recognize '$AUTOLOAD'.");
+	}
+	my ($pkg_name, $sub_name) = ($1, $2);
+
+	my $search = package_hierarchy($pkg_name);
+	my $generators = $HIERARCHIES{'universal'}->lookup($search, $pkg_name);
+	foreach my $generator (@$generators) {
+		my $rv = $generator->run($self, $pkg_name, $sub_name, @_);
+		return($rv) if(defined($rv));
+	}
+
+        return;
+}
 
 if(DEBUG) {
 	eval q{

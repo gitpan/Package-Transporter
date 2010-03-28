@@ -12,7 +12,6 @@ sub ATB_DRAIN() { 2 };
 sub ATB_POTENTIAL() { 3 };
 
 use Package::Transporter::Generator;
-use Package::Transporter::Generator::Anonymous;
 
 my $generator_class = 'Package::Transporter::Generator';
 my $autoload = q{

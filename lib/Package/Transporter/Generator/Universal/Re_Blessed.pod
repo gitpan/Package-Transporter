@@ -1,0 +1,43 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Universal::Re_Blessed - Delayed object construction through a helper object.
+
+=head1 SYNOPSIS
+
+	use strict;
+	use Data::Dumper;
+	
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->register_universal('::Re_Blessed', 'URI');
+	};
+	
+	my $uri1 = URI->potentially_new('//www.perl.org');
+	my $uri2 = $uri1;
+	print STDERR Dumper($uri1, $uri2);
+	
+	$uri1->scheme('http');
+	print STDERR Dumper($uri1, $uri2);
+	exit(0);
+
+=head1 DESCRIPTION
+
+Creates a sleeper object through the constructor potentially_new and instantiates the real object upon the first method call.
+
+=head2 Output
+
+	$VAR1 = bless( [
+			'URI',
+			'//www.perl.org'
+			],
+		'Package::Transporter::Generator::Universal::Re_Blessed' );
+	$VAR2 = $VAR1;
+	$VAR1 = bless( do{\(my $o = 'http://www.perl.org')}, 'URI::http' );
+	$VAR2 = $VAR1;
+	
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

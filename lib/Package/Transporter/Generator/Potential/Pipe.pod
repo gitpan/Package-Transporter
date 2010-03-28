@@ -1,0 +1,58 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Potential::Pipe - AUTOLOAD via a Unix pipe
+
+=head1 SYNOPSIS
+
+	use strict;
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->register_potential('::Pipe', 'FOR_ANY');
+	};
+	
+	sub hello_world() { print "Hello World.\n"; }
+	print STDOUT hallo_welt();
+	
+	Package::Transporter->new(sub{eval shift}); # access lexicals;
+	exit(0);
+
+=head1 DESCRIPTION
+
+Problem: at the end of a long computation, the program crashed due to a missing or misspelled subroutine. Solution: Correct the problem by submitting code through a pipe while the program is still running.
+
+Creates two files, one for status text (.txt), one fifo for control (.pl). Base file name is $time-$$-$pkg_name. Doesn't requires an interactive TTY.
+
+Chances are that you can recover from an otherwise fatal situation, but keep in mind that any kind of recovery has to be practiced.
+
+This generator is simply a proof of concept for any kind of non-TTY communication.
+
+Security consideration: anybody with access to the fifo or the directory might get an opportunity to do anything inside your program.
+
+=head2 File Contents
+
+	#----------------------------------------------------------------------------
+	# Wed Mar 17 17:47:38 2010
+	# The subroutine 'hallo_welt' is missing in package 'main'.
+	#----------------------------------------------------------------------------
+	 at /home/wt/products/Perl_Modules/Package-Transporter/development/lib/Package/Transporter/Generator.pm line 23
+	        Package::Transporter::Generator::Potential::run('Package::Transporter::Generator::Potential::Pipe=ARRAY(0x8b3920)', 'Package::Transporter::Standard=ARRAY(0x8b3b00)', 'main', 'hallo_welt') called at /home/wt/products/Perl_Modules/Package-Transporter/development/lib/Package/Transporter/Standard.pm line 297
+	        Package::Transporter::Standard::autoload('Package::Transporter::Standard=ARRAY(0x8b3b00)', 'main::hallo_welt') called at (eval 3) line 6
+	        main::AUTOLOAD() called at pipe.pl line 9
+	#----------------------------------------------------------------------------
+	$VAR1 = [];
+	#----------------------------------------------------------------------------
+
+=head2 Recovery Example
+
+	cat - > 1268843282-20525-main.pl <<EOF
+	sub hallo_welt() {
+		print "Hello World.\n";
+	}                      
+	EOF
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

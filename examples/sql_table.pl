@@ -3,8 +3,8 @@ use strict;
 use Carp qw();
 use DBI;
 use Package::Transporter sub{eval shift};
-use Package::Transporter::Generator::SQL_Table;
-warn('See the manual page Package::Transporter::Generator::SQL_Table');
+use Package::Transporter::Generator::Potential::SQL_Table;
+warn('See the manual page Package::Transporter::Generator::Potential::SQL_Table');
 
 
 my $dbh = DBI->connect('DBI:mysql:perlsub', *LOGIN*, *PASSWORD*) ||
@@ -15,7 +15,7 @@ my $date = scalar(localtime(time()));
 
 {
 	my $pkg = Package::Transporter->new(sub{eval shift});
-	my $generator = Package::Transporter::Generator::SQL_Table->new($pkg, $dbh);
+	my $generator = Package::Transporter::Generator::Potential::SQL_Table->new($pkg, $dbh);
 	$generator->prototypes();
 	$pkg->register_potential($generator, 'FOR_SELF');
 };

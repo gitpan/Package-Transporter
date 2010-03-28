@@ -2,8 +2,9 @@
 use strict;
 
 use Package::Transporter sub{eval shift}, sub {
-	$_[0]->register_potential('::Automatic_Require', 'FOR_ANY');
+	$_[0]->register_universal('::Automatic_Require', '');
 };
 
-print CGI->h1->('Hello World.'), "\n";
+print CGI->h1('Hello World.'), "\n";
+
 exit(0);

@@ -4,7 +4,7 @@ use strict;
 use Package::Transporter sub{eval shift}, sub {
 	$_[0]->register_drain('::Flatened', 'FOR_ANY', 'IS_',
 		TRUE => 1, FALSE => 0);
-	my $yn = q{
+	my $yn = sub {
  		return(q{print STDOUT ($_[0] ? 'Yes' : 'No'), "\n";});
 	};
 	$_[0]->register_potential($yn, 'FOR_ANY', 'yn');

@@ -47,7 +47,7 @@ sub($$;@) {
 		local $@;
 		$rule = eval $code;
 		Carp::confess($@) if ($@);
-		$generator = Package::Transporter::Generator::Anonymous->new($rule);
+		$generator = Package::Transporter::Generator::Potential::Anonymous->new($rule);
 	}
 	return($generator);
 }
@@ -60,7 +60,7 @@ sub recognize {
 		my $prefix = shift // '';
 		$generator = $self->create_generator("$prefix$generator");
 	} elsif ($type eq 'CODE') {
-		$generator = Package::Transporter::Generator::Anonymous
+		$generator = Package::Transporter::Generator::Potential::Anonymous
 			->new($generator);
 	}
 	unless (Scalar::Util::blessed($generator) and $generator->can('run')) {

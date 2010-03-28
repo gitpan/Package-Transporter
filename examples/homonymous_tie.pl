@@ -1,7 +1,7 @@
 #!/usr/bin/perl -W -T
 use strict;
 use Carp qw();
-use Package::Transporter::Generator::Homonymous_Tie;
+use Package::Transporter::Generator::Potential::Homonymous_Tie;
 
 # homonymous means the same name as the package file base name,
 # which is 'main' in this case (no package name set)
@@ -10,7 +10,7 @@ unless (-f 'main.dbm') {
 }
 
 use Package::Transporter sub{eval shift}, sub {
-	my $generator = Package::Transporter::Generator::Homonymous_Tie->new($_[0]);
+	my $generator = Package::Transporter::Generator::Potential::Homonymous_Tie->new($_[0]);
 	$generator->prototypes();
 	$_[0]->register_potential($generator, 'FOR_SELF');
 };

@@ -3,7 +3,7 @@ use strict;
 
 package Synopsis;
 use Package::Transporter sub{eval shift}, sub {
-	my $generator = $_[0]->create_generator('::Export', 
+	my $generator = $_[0]->create_generator('::Potential::Export', 
 		'POSIX', 'Data::Dumper');
 	$_[0]->register_potential($generator, 'FOR_SELF');
 };

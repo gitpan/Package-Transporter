@@ -87,8 +87,18 @@ sub array_equality($$) {
 	}
 	return(1);
 }
+sub package_hierarchy {
+	my $name = shift;
+	my @hierarchy = ($name);
+	while($name =~ s,\w+(::)?$,,s) {
+		push(@hierarchy, $name);
+	}
+	return(\@hierarchy);
+}
+
 foreach my $test (@tests) {
-	my $pp = Package::Transporter::Path_Partition->new($test->[1]);
+	my $search = package_hierarchy($test->[1]);
+	my $pp = Package::Transporter::Path_Partition->new($search);
 	$test->[2]->($pp);
 	ok(array_equality($pp->[0], $test->[3]), $test->[0]);
 };

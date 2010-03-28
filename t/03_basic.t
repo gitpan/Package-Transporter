@@ -8,9 +8,9 @@ use Package::Transporter sub{eval shift}, sub {
 	my $i = 0;
 	my $generator = [sub {
 		$i += 7;
-		return(qq{sprintf('$i%s', '$_[1]')});
+		return(qq{sprintf('$i%s', '$_[2]')});
 	}];
-	bless($generator, 'Package::Transporter::Generator::Anonymous');
+	bless($generator, 'Package::Transporter::Generator::Potential::Anonymous');
 
 	my $rule = Package::Transporter::Rule::Standard->new($generator,
 		['Basic_Test', 'main'], ['tfrv1', 'tfrv3']);

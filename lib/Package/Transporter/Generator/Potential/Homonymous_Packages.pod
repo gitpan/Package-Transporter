@@ -1,0 +1,43 @@
+=pod
+
+=head1 NAME
+
+Package::Transporter::Generator::Potential::Homonymous_Packages - Subroutines from the same package in a different file
+
+=head1 SYNOPSIS
+
+	use strict;
+	
+	# homonymous means the same package name ... look for "main.pm"
+	use lib 'homonymous_package';
+	
+	use Package::Transporter sub{eval shift}, sub {
+		$_[0]->register_potential('::Homonymous_Packages', 'FOR_SELF', '');
+	};
+	
+	yn(potentially_defined('hello_worlds'));
+	yn(potentially_defined('hello_world'));
+	yn(!defined(&hello_world));
+	
+	hello_world();
+	
+	yn(defined(&hello_world));
+	exit(0);
+
+=head1 DESCRIPTION
+
+Copies the missing subroutine from the same package in different .pm files, which are found somewhere else in @INC. A pure development aid. An on-demand copy & paste. Imagine you want to start a branch of a module without making a copy first, but rather start with a minimal package file. This generator will get missing subroutines from the original package file on demand.
+
+Prototype definitions aren't supported, yet. No logging, no caching either. Breaks the taint concept by accidentally using $1 but without checking whether the file is trustworthy. (So much about the robustness of taint, the auditors nightmare.)
+
+Set the search path via @INC or give directory names when setting up the generator manually. Example:
+
+	my $generator = $_[0]->create_generator('::Homonymous_Packages', 
+		'/search/path/for/modules', '/another/patch');
+
+
+=head1 ANYTHING ELSE
+
+Please see the documentation of the upstream package L<Package::Transporter>.
+
+=cut

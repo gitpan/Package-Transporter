@@ -20,7 +20,7 @@ my $autoload_template = q{
 sub run {
 	my ($self, $pkg, $pkg_name, $sub_name) = (shift, shift, shift, shift);
 
-	my $code = $self->implement($pkg, $sub_name, @_);
+	my $code = $self->implement($pkg, $pkg_name, $sub_name, @_);
 	return unless (defined($code));
 	if (ref($code) eq '') {
 		my $existing = "$pkg_name\::$sub_name";
@@ -38,6 +38,19 @@ sub run {
 		return(failure(ref($self), $sub_name, ' [generator failed]'));
 	}
 	return($code);
+}
+
+sub alias {
+	my ($self, $pkg, $original, $alias) = @_;
+	
+	my $code = sprintf(q{
+my $sub_ref = \&%s;
+*%s = $sub_ref;
+return($sub_ref);
+},
+		$original,
+		$alias);
+	return($pkg->transport(\$code));
 }
 
 my %CLASSES = ();
