@@ -9,10 +9,13 @@ use parent qw(
 sub ATB_DATA() { 1 };
 
 sub determine {
-	my ($self, $prefix) = @_;
+	my ($self, $prefix, $data) = @_;
 
 	my @values = ();
-	foreach my $name (@{$self->[ATB_DATA]}) {
+#	my %seen = ();
+	foreach my $name (@$data) {
+#		next if(exists($seen{$name}));
+#		$seen{$name} = 1;
 		my $value = "$prefix$name";
 		push(@values, [$value, lc($value)]);
 	}

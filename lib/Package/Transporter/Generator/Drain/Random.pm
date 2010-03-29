@@ -11,11 +11,14 @@ sub ATB_DATA() { 1 };
 my %VALUES = ('FFFFFFFF' => 1);
 
 sub determine {
-	my ($self, $prefix) = @_;
+	my ($self, $prefix, $data) = @_;
 
 	my @values = ();
 	my $value = 'FFFFFFFF';
-	foreach my $name (@{$self->[ATB_DATA]}) {
+#	my %seen = ();
+	foreach my $name (@$data) {
+#		next if(exists($seen{$name}));
+#		$seen{$name} = 1;
                 while($VALUES{$value}) {
                         $value = sprintf('%08x', int(rand(2**32-1)));
                 }

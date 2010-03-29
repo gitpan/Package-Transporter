@@ -1,3 +1,7 @@
+0.88	29 March 2010
+	- fixed permanent accumulation of data for constant functions
+	- made ::Drain::Flatened tolerant against duplicates
+
 0.87	28 March 2010
 	- added register_universal
 	- organized generators according to their type

@@ -279,9 +279,9 @@ sub implement_drain {
 
 	while(my ($prefix, $types) = each(%$generators)) {
 		while(my ($type, $line) = each(%$types)) {
+			my @data = map(@{$_->get_data}, @$line);
 			my $main = shift(@$line);
-			$main->consume(@$line);
-			$main->run($self, $pkg_name, $prefix);
+			$main->run($self, $pkg_name, $prefix, \@data);
 		}
 	}
 

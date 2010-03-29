@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Package-Transporter
-version:             0.87
+version:             0.88
 abstract:            ~
 license:             perl
 author:              
